@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace TowerDefenseColab.GamePhases
 {
-    public abstract class GamePhaseBase
+    public abstract class IGameLoopMethods
     {
+        public abstract void Init();
+
         public abstract void Update(TimeSpan timeDelta);
 
         public abstract void Render(BufferedGraphics g);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,6 @@ namespace TowerDefenseColab
     public partial class GameWindow : Form
     {
         private bool _isAlive = true;
-        private float x = 0;
         private GamePhaseManager _phaseManager;
 
         public GameWindow()
@@ -32,26 +32,32 @@ namespace TowerDefenseColab
         public void InitGame()
         {
             _phaseManager = new GamePhaseManager();
-            _phaseManager.Add(GamePhaseEnum.MainGame, new GameLevel01());
+            _phaseManager.Add(GamePhaseEnum.MainGame, new GameLevel(1, _phaseManager));
             _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.MainGame);
         }
 
         public void GameLoop()
         {
+            var stopWatch = Stopwatch.StartNew();
+            TimeSpan last = stopWatch.Elapsed;
             using (BufferedGraphics backBuffer = InitBackBuffer())
             {
                 InitGame();
                 while (_isAlive)
                 {
                     // update
-                    _phaseManager.Update(new TimeSpan());
+                    var currentTimeSpan = stopWatch.Elapsed;
+                    _phaseManager.Update(currentTimeSpan - last);
 
                     // render
                     _phaseManager.Render(backBuffer);
 
                     backBuffer.Render();
                     backBuffer.Render(this.CreateGraphics());
+
                     Application.DoEvents();
+
+                    last = currentTimeSpan;
                 }
             }
         }

@@ -46,8 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GamePhases\GameLevel01.cs" />
-    <Compile Include="GamePhases\GamePhaseBase.cs" />
+    <Compile Include="GameObjects\CircleOfDeath.cs" />
+    <Compile Include="GameObjects\EnemyBase.cs" />
+    <Compile Include="GameObjects\GameObjectBase.cs" />
+    <Compile Include="GamePhases\GameLevel.cs" />
+    <Compile Include="GamePhases\IGameLoopMethods.cs" />
     <Compile Include="GamePhases\GamePhaseEnum.cs" />
     <Compile Include="GamePhases\GamePhaseManager.cs" />
     <Compile Include="GameWindow.cs">
@@ -87,7 +90,11 @@
     <Content Include="Assets\bglvl1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\circleOfDeath.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

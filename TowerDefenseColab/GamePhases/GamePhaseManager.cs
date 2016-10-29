@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace TowerDefenseColab.GamePhases
 {
-    public class GamePhaseManager
+    public class GamePhaseManager : IGameLoopMethods
     {
-        private Dictionary<GamePhaseEnum, GamePhaseBase> _gamePhases = new Dictionary<GamePhaseEnum, GamePhaseBase>();
+        private Dictionary<GamePhaseEnum, IGameLoopMethods> _gamePhases = new Dictionary<GamePhaseEnum, IGameLoopMethods>();
 
-        private GamePhaseBase _activeGamePhase;
+        private IGameLoopMethods _activeGamePhase;
         
-        public void Add(GamePhaseEnum phaseType, GamePhaseBase gamePhase)
+        public void Add(GamePhaseEnum phaseType, IGameLoopMethods gamePhase)
         {
             _gamePhases.Add(phaseType, gamePhase);
         }
@@ -23,17 +23,24 @@ namespace TowerDefenseColab.GamePhases
             _gamePhases.Clear();
         }
 
+        public override void Init()
+        {
+            _activeGamePhase.Init();
+        }
+
         public void ChangeActiveGamePhase(GamePhaseEnum gamePhase)
         {
             _activeGamePhase = _gamePhases[gamePhase];
+
+            _activeGamePhase.Init();
         }
 
-        public void Update(TimeSpan timeDelta)
+        public override void Update(TimeSpan timeDelta)
         {
             _activeGamePhase.Update(timeDelta);
         }
 
-        public void Render(BufferedGraphics gr)
+        public override void Render(BufferedGraphics gr)
         {
             _activeGamePhase.Render(gr);
         }
