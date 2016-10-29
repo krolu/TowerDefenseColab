@@ -16,7 +16,10 @@ namespace TowerDefenseColab
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            using (GameWindow gw = new GameWindow())
+            {
+                gw.GameLoop();
+            }
         }
     }
 }
