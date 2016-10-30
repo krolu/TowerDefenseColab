@@ -52,9 +52,12 @@
   <ItemGroup>
     <Compile Include="GameObjects\CircleOfDeath.cs" />
     <Compile Include="GameObjects\EnemyBase.cs" />
+    <Compile Include="GameObjects\EnemyFactory.cs" />
+    <Compile Include="GameObjects\EnemyTypeEnum.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
     <Compile Include="GamePhases\GameLevel.cs" />
-    <Compile Include="GamePhases\GameLoopMethods.cs" />
+    <Compile Include="GameLoopMethods.cs" />
+    <Compile Include="GamePhases\GameLevelFactory.cs" />
     <Compile Include="GamePhases\GamePhaseEnum.cs" />
     <Compile Include="GamePhases\GamePhaseManager.cs" />
     <Compile Include="GameWindow.cs">
@@ -92,12 +95,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\bglvl2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\bglvl1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\circleOfDeath.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\menu.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

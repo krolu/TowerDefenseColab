@@ -3,7 +3,8 @@
     public enum GamePhaseEnum
     {
         StartScreen,
-        MainGame,
+        Level001,
+        Level002,
         Credits
     }
 }

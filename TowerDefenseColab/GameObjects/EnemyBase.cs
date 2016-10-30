@@ -4,11 +4,28 @@ namespace TowerDefenseColab.GameObjects
 {
     public class EnemyBase : GameObjectBase
     {
-        public float Speed { get; set; }
+        /// <summary>
+        /// Pixels per second.
+        /// </summary>
+        protected float Speed { private get; set; }
+
+        public bool IsAlive { get; set; } = true;
 
         public override void Update(TimeSpan timeDelta)
         {
-            Location = new System.Drawing.PointF(Location.X + Speed*timeDelta.Milliseconds, Location.Y);
+            var deltaX = Speed*(float) timeDelta.TotalSeconds;
+            var deltaY = 0;
+            Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
+
+            if (Location.X > 800)
+            {
+                Die();
+            }
+        }
+
+        private void Die()
+        {
+            IsAlive = false;
         }
     }
 }

@@ -2,17 +2,21 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using TowerDefenseColab.GameObjects;
 using TowerDefenseColab.GamePhases;
 
 namespace TowerDefenseColab
 {
     public partial class GameWindow : Form
     {
+        private readonly GamePhaseManager _phaseManager;
         private bool _isAlive = true;
-        private GamePhaseManager _phaseManager;
+        private readonly GameLevelFactory _gameLevelFactory;
 
-        public GameWindow()
+        public GameWindow(GamePhaseManager phaseManager, GameLevelFactory gameLevelFactory)
         {
+            _phaseManager = phaseManager;
+            _gameLevelFactory = gameLevelFactory;
             InitializeComponent();
             Show();
         }
@@ -23,11 +27,16 @@ namespace TowerDefenseColab
             return myContext.Allocate(CreateGraphics(), DisplayRectangle);
         }
 
-        public void InitGame()
+        private void InitGame()
         {
-            _phaseManager = new GamePhaseManager();
-            _phaseManager.Add(GamePhaseEnum.MainGame, new GameLevel(1, _phaseManager));
-            _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.MainGame);
+            // Create the pahses.
+            // TODO: should it be even done here or by the PhageManager class itself?
+            _phaseManager.Add(GamePhaseEnum.Level001,
+                _gameLevelFactory.CreateLevel(1, new[] {EnemyTypeEnum.CircleOfDeath}, new Point(0, 270)));
+            _phaseManager.Add(GamePhaseEnum.Level002,
+                _gameLevelFactory.CreateLevel(2, new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath},
+                    new Point(0, 270)));
+            _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.Level001);
         }
 
         public void GameLoop()

@@ -13,6 +13,11 @@ namespace TowerDefenseColab.GameObjects
         {
         }
 
+        public void Spawn(Point location)
+        {
+            Location = new PointF(location.X, location.Y);
+        }
+
         public override void Render(BufferedGraphics g)
         {
             g.Graphics.DrawImage(Sprite, Location);
