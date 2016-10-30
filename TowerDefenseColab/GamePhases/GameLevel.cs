@@ -14,18 +14,18 @@ namespace TowerDefenseColab.GamePhases
         private readonly List<EnemyBase> _monsters = new List<EnemyBase>();
         private readonly Queue<EnemyTypeEnum> _enemyTypesToSpawn;
         private readonly EnemyFactory _enemyFactory;
-        private readonly Point _spawnPoint;
+        private readonly List<Point> _waypoints;
         private TimeSpan _lastSpawn = TimeSpan.Zero;
         private readonly Stopwatch _timeSinceStart = new Stopwatch();
         private readonly GamePhaseManager _gamePhaseManager;
 
         public GameLevel(int levelNumber, IEnumerable<EnemyTypeEnum> enemyTypes, EnemyFactory enemyFactory,
-            Point spawnPoint, GamePhaseManager gamePhaseManager)
+            List<Point> waypoints, GamePhaseManager gamePhaseManager)
         {
             _background = Image.FromFile($@"Assets\bglvl{levelNumber}.png");
             _enemyTypesToSpawn = new Queue<EnemyTypeEnum>(enemyTypes);
             _enemyFactory = enemyFactory;
-            _spawnPoint = spawnPoint;
+            _waypoints = waypoints;
             _gamePhaseManager = gamePhaseManager;
         }
 
@@ -74,7 +74,7 @@ namespace TowerDefenseColab.GamePhases
                 EnemyTypeEnum enemyType = _enemyTypesToSpawn.Dequeue();
                 EnemyBase enemy = _enemyFactory.GetEnemy(enemyType);
                 enemy.Init();
-                enemy.Spawn(_spawnPoint);
+                enemy.Spawn(_waypoints);
                 _monsters.Add(enemy);
                 _lastSpawn = nao;
             }

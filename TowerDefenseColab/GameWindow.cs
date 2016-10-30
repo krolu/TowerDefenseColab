@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -29,13 +30,14 @@ namespace TowerDefenseColab
 
         private void InitGame()
         {
+
+            var waypoints = new List<Point>() { new Point(0, 270) };
             // Create the pahses.
             // TODO: should it be even done here or by the PhageManager class itself?
             _phaseManager.Add(GamePhaseEnum.Level001,
-                _gameLevelFactory.CreateLevel(1, new[] {EnemyTypeEnum.CircleOfDeath}, new Point(0, 270)));
+                _gameLevelFactory.CreateLevel(1, new[] {EnemyTypeEnum.CircleOfDeath}, waypoints));
             _phaseManager.Add(GamePhaseEnum.Level002,
-                _gameLevelFactory.CreateLevel(2, new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath},
-                    new Point(0, 270)));
+                _gameLevelFactory.CreateLevel(2, new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath}, waypoints));
             _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.Level001);
         }
 

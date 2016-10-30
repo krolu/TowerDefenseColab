@@ -1,26 +1,31 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using TowerDefenseColab.GamePhases;
+using System.Linq;
 
 namespace TowerDefenseColab.GameObjects
 {
     public abstract class GameObjectBase : GameLoopMethods
     {
-        protected PointF Location { get; set; }
+        protected List<Point> Location { get; set; }
 
         protected Image Sprite { get; set; }
 
         public override void Init()
         {
+            
         }
 
-        public void Spawn(Point location)
+        public void Spawn(List<Point> location)
         {
-            Location = new PointF(location.X, location.Y);
+            //przekazuje liste waypointow
+            Location = location;
         }
 
         public override void Render(BufferedGraphics g)
         {
-            g.Graphics.DrawImage(Sprite, Location);
+            //przekazuje mu pierwsza pozycje do spawnowania
+            g.Graphics.DrawImage(Sprite, Location.First());
         }
     }
 }
