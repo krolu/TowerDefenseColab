@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TowerDefenseColab.GamePhases
 {
-    public class GamePhaseManager : IGameLoopMethods
+    public class GamePhaseManager : GameLoopMethods
     {
-        private Dictionary<GamePhaseEnum, IGameLoopMethods> _gamePhases = new Dictionary<GamePhaseEnum, IGameLoopMethods>();
+        private readonly Dictionary<GamePhaseEnum, GameLoopMethods> _gamePhases =
+            new Dictionary<GamePhaseEnum, GameLoopMethods>();
 
-        private IGameLoopMethods _activeGamePhase;
-        
-        public void Add(GamePhaseEnum phaseType, IGameLoopMethods gamePhase)
+        private GameLoopMethods _activeGamePhase;
+
+        public void Add(GamePhaseEnum phaseType, GameLoopMethods gamePhase)
         {
             _gamePhases.Add(phaseType, gamePhase);
         }

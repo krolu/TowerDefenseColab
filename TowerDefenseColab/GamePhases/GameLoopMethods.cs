@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TowerDefenseColab.GamePhases
 {
-    public abstract class IGameLoopMethods
+    public abstract class GameLoopMethods
     {
         public abstract void Init();
 

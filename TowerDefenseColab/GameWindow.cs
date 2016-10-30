@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TowerDefenseColab.GamePhases;
 
@@ -26,7 +20,7 @@ namespace TowerDefenseColab
         public BufferedGraphics InitBackBuffer()
         {
             BufferedGraphicsContext myContext = BufferedGraphicsManager.Current;
-            return myContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
+            return myContext.Allocate(CreateGraphics(), DisplayRectangle);
         }
 
         public void InitGame()
@@ -53,7 +47,7 @@ namespace TowerDefenseColab
                     _phaseManager.Render(backBuffer);
 
                     backBuffer.Render();
-                    backBuffer.Render(this.CreateGraphics());
+                    backBuffer.Render(CreateGraphics());
 
                     Application.DoEvents();
 

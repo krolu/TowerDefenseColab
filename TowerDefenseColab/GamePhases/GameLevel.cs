@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TowerDefenseColab.GameObjects;
 
 namespace TowerDefenseColab.GamePhases
 {
-    public class GameLevel : IGameLoopMethods
+    public class GameLevel : GameLoopMethods
     {
-        private Image _background;
-        private List<GameObjectBase> Monsters = new List<GameObjectBase>();
-        private GamePhaseManager _phaseManager;
+        private readonly Image _background;
+        private readonly List<GameObjectBase> _monsters = new List<GameObjectBase>();
+        private readonly GamePhaseManager _phaseManager;
 
         public GameLevel(int levelNumber, GamePhaseManager phaseManager)
         {
@@ -24,14 +21,14 @@ namespace TowerDefenseColab.GamePhases
         {
             var a = new CircleOfDeath(_phaseManager);
             a.Init();
-            Monsters.Add(a);
+            _monsters.Add(a);
         }
 
         public override void Render(BufferedGraphics g)
         {
             // clearing screen
             g.Graphics.DrawImage(_background, 0, 0);
-            foreach (var monster in Monsters)
+            foreach (var monster in _monsters)
             {
                 monster.Render(g);
             }
@@ -39,7 +36,7 @@ namespace TowerDefenseColab.GamePhases
 
         public override void Update(TimeSpan timeDelta)
         {
-            foreach (var monster in Monsters)
+            foreach (var monster in _monsters)
             {
                 monster.Update(timeDelta);
             }
