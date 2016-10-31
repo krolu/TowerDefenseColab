@@ -16,9 +16,9 @@ namespace TowerDefenseColab.GameObjects
         {
             var deltaX = Speed*(float) timeDelta.TotalSeconds;
             var deltaY = 0;
-            //Location = new System.Drawing.PointF(Location.First().X + deltaX, Location.First().Y + deltaY);
+            Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
 
-            if (Location.Last().X > 800)
+            if (Location.X > 800)
             {
                 Die();
             }

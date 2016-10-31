@@ -99,6 +99,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\bglvl2Path.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\bglvl1Path.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

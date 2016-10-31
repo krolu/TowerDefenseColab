@@ -16,7 +16,7 @@ namespace TowerDefenseColab.GameObjects
             
         }
 
-        public void Spawn(List<PointF> location)
+        public void Spawn(PointF location)
         {
             //przekazuje liste waypointow
             Location = location;
@@ -25,7 +25,7 @@ namespace TowerDefenseColab.GameObjects
         public override void Render(BufferedGraphics g)
         {
             //przekazuje mu pierwsza pozycje do spawnowania
-            g.Graphics.DrawImage(Sprite, Location.First());
+            g.Graphics.DrawImage(Sprite, Location);
         }
     }
 }

@@ -37,9 +37,9 @@ namespace TowerDefenseColab
             // Create the pahses.
             // TODO: should it be even done here or by the PhageManager class itself?
             _phaseManager.Add(GamePhaseEnum.Level001,
-                _gameLevelFactory.CreateLevel(1, new[] {EnemyTypeEnum.CircleOfDeath}, waypoints));
-            //_phaseManager.Add(GamePhaseEnum.Level002,
-            //    _gameLevelFactory.CreateLevel(2, new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath}, waypoints));
+                _gameLevelFactory.CreateLevel(1, new[] {EnemyTypeEnum.CircleOfDeath}, new PointF(0, 270)));
+            _phaseManager.Add(GamePhaseEnum.Level002,
+                _gameLevelFactory.CreateLevel(2, new[] { EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath }, new PointF(0, 270)));
             _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.Level001);
         }
 
