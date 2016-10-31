@@ -12,6 +12,10 @@ namespace TowerDefenseColab.GameObjects
 
         public bool IsAlive { get; set; } = true;
 
+        public override void Init()
+        {
+        }
+
         public override void Update(TimeSpan timeDelta)
         {
             var deltaX = Speed*(float) timeDelta.TotalSeconds;

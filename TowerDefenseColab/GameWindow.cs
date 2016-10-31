@@ -14,15 +14,16 @@ namespace TowerDefenseColab
         private readonly StartScreen _startScreen;
         private bool _isAlive = true;
         private readonly GameLevelFactory _gameLevelFactory;
-        private readonly InputManager _keyboardManager;
+        private readonly InputManager _inputManager;
 
         public GameWindow(GamePhaseManager phaseManager, StartScreen startScreen, GameLevelFactory gameLevelFactory,
-            InputManager keyboardManager)
+            InputManager inputManager)
         {
             _phaseManager = phaseManager;
             _startScreen = startScreen;
             _gameLevelFactory = gameLevelFactory;
-            _keyboardManager = keyboardManager;
+            _inputManager = inputManager;
+            _inputManager.SetMousePointFunction(() => PointToClient(Cursor.Position));
             InitializeComponent();
             Show();
         }
@@ -52,8 +53,8 @@ namespace TowerDefenseColab
                 {
                     EnemyTypesToSpawn = new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath},
                     SpawnPoint = new Point(0, 270),
-                    SpawnFrequency = TimeSpan.FromSeconds(1),
-                    LevelNumber = 1
+                    SpawnFrequency = TimeSpan.FromSeconds(1.5),
+                    LevelNumber = 2
                 }));
 
             _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.StartScreen);
@@ -92,17 +93,17 @@ namespace TowerDefenseColab
 
         private void GameWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            _keyboardManager.KeyPressed(e.KeyCode);
+            _inputManager.KeyPressed(e.KeyCode);
         }
 
         private void GameWindow_KeyUp(object sender, KeyEventArgs e)
         {
-            _keyboardManager.KeyReleased(e.KeyCode);
+            _inputManager.KeyReleased(e.KeyCode);
         }
 
         private void GameWindow_MouseClick(object sender, MouseEventArgs e)
         {
-            _keyboardManager.MouseClicked(e);
+            _inputManager.MouseClicked(e);
         }
     }
 }

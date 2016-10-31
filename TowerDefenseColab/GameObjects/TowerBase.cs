@@ -1,24 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 
 namespace TowerDefenseColab.GameObjects
 {
     public class TowerBase : GameObjectBase
     {
-        private TowerStateEnum towerStateEnum = TowerStateEnum.Setup;
-        private InputManager _inputManager;
+        public TowerStateEnum TowerStateEnum = TowerStateEnum.Setup;
+        private readonly InputManager _inputManager;
 
         public TowerBase(InputManager inputManager)
         {
             _inputManager = inputManager;
         }
-        
+
+        public override void Init()
+        {
+            Sprite = Image.FromFile("Assets/squareOfPew.png");
+        }
+
+
         public override void Update(TimeSpan timeDelta)
         {
-            switch (towerStateEnum)
+            switch (TowerStateEnum)
             {
                 case TowerStateEnum.Setup:
                     Location = _inputManager.GetMousePosition();
@@ -26,7 +29,7 @@ namespace TowerDefenseColab.GameObjects
                 case TowerStateEnum.Active:
                     break;
                 default:
-                    break;
+                    throw new IndexOutOfRangeException(nameof(TowerStateEnum));
             }
         }
     }

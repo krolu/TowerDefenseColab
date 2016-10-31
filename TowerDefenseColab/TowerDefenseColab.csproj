@@ -62,6 +62,7 @@
     <Compile Include="GameLoopMethods.cs" />
     <Compile Include="GamePhases\GameLevelFactory.cs" />
     <Compile Include="GamePhases\GameLevelSettings.cs" />
+    <Compile Include="GamePhases\GamePhase.cs" />
     <Compile Include="GamePhases\GamePhaseEnum.cs" />
     <Compile Include="GamePhases\GamePhaseManager.cs" />
     <Compile Include="GamePhases\StartScreen.cs" />
@@ -117,6 +118,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\squareOfPew.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using TowerDefenseColab.GamePhases;
-using System.Linq;
+﻿using System.Drawing;
 
 namespace TowerDefenseColab.GameObjects
 {
@@ -11,20 +8,18 @@ namespace TowerDefenseColab.GameObjects
 
         protected Image Sprite { get; set; }
 
-        public override void Init()
+        public void SetLocation(Point location)
         {
-            
-        }
-
-        public void Spawn(PointF location)
-        {
-            //przekazuje liste waypointow
             Location = location;
         }
-        
+
+        public void SetLocationCenter(Point location)
+        {
+            Location = new PointF(location.X - Sprite.Width/2, location.Y - Sprite.Height/2);
+        }
+
         public override void Render(BufferedGraphics g)
         {
-            //przekazuje mu pierwsza pozycje do spawnowania
             g.Graphics.DrawImage(Sprite, Location);
         }
     }
