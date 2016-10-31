@@ -55,6 +55,9 @@
     <Compile Include="GameObjects\EnemyFactory.cs" />
     <Compile Include="GameObjects\EnemyTypeEnum.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
+    <Compile Include="GameObjects\TowerBase.cs" />
+    <Compile Include="GameObjects\TowerStateEnum.cs" />
+    <Compile Include="GameObjects\Weapon.cs" />
     <Compile Include="GamePhases\GameLevel.cs" />
     <Compile Include="GameLoopMethods.cs" />
     <Compile Include="GamePhases\GameLevelFactory.cs" />
@@ -66,6 +69,7 @@
     <Compile Include="GameWindow.Designer.cs">
       <DependentUpon>GameWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="InputManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GameWindow.resx">

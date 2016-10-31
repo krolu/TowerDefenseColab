@@ -14,15 +14,15 @@ namespace TowerDefenseColab.GamePhases
         private readonly List<EnemyBase> _monsters = new List<EnemyBase>();
         private readonly Queue<EnemyTypeEnum> _enemyTypesToSpawn;
         private readonly EnemyFactory _enemyFactory;
-        private readonly List<Point> _waypoints;
+        private readonly List<PointF> _waypoints;
         private TimeSpan _lastSpawn = TimeSpan.Zero;
         private readonly Stopwatch _timeSinceStart = new Stopwatch();
         private readonly GamePhaseManager _gamePhaseManager;
 
         public GameLevel(int levelNumber, IEnumerable<EnemyTypeEnum> enemyTypes, EnemyFactory enemyFactory,
-            List<Point> waypoints, GamePhaseManager gamePhaseManager)
+            List<PointF> waypoints, GamePhaseManager gamePhaseManager)
         {
-            _background = Image.FromFile($@"Assets\bglvl{levelNumber}.png");
+            _background = Image.FromFile($@"Assets\bglvl{levelNumber}Path.png");
             _enemyTypesToSpawn = new Queue<EnemyTypeEnum>(enemyTypes);
             _enemyFactory = enemyFactory;
             _waypoints = waypoints;

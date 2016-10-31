@@ -13,11 +13,13 @@ namespace TowerDefenseColab
         private readonly GamePhaseManager _phaseManager;
         private bool _isAlive = true;
         private readonly GameLevelFactory _gameLevelFactory;
+        private readonly InputManager _keyboardManager;
 
-        public GameWindow(GamePhaseManager phaseManager, GameLevelFactory gameLevelFactory)
+        public GameWindow(GamePhaseManager phaseManager, GameLevelFactory gameLevelFactory, InputManager keyboardManager)
         {
             _phaseManager = phaseManager;
             _gameLevelFactory = gameLevelFactory;
+            _keyboardManager = keyboardManager;
             InitializeComponent();
             Show();
         }
@@ -31,13 +33,13 @@ namespace TowerDefenseColab
         private void InitGame()
         {
 
-            var waypoints = new List<Point>() { new Point(0, 270) };
+            var waypoints = new List<PointF>() { new PointF(0, 270) };
             // Create the pahses.
             // TODO: should it be even done here or by the PhageManager class itself?
             _phaseManager.Add(GamePhaseEnum.Level001,
                 _gameLevelFactory.CreateLevel(1, new[] {EnemyTypeEnum.CircleOfDeath}, waypoints));
-            _phaseManager.Add(GamePhaseEnum.Level002,
-                _gameLevelFactory.CreateLevel(2, new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath}, waypoints));
+            //_phaseManager.Add(GamePhaseEnum.Level002,
+            //    _gameLevelFactory.CreateLevel(2, new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath}, waypoints));
             _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.Level001);
         }
 
@@ -70,6 +72,21 @@ namespace TowerDefenseColab
         private void GameWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             _isAlive = false;
+        }
+
+        private void GameWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            _keyboardManager.KeyPressed(e.KeyCode);
+        }
+
+        private void GameWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            _keyboardManager.KeyReleased(e.KeyCode);
+        }
+
+        private void GameWindow_MouseClick(object sender, MouseEventArgs e)
+        {
+            _keyboardManager.MouseClicked(e);
         }
     }
 }

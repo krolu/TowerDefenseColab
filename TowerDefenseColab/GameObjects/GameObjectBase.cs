@@ -7,7 +7,7 @@ namespace TowerDefenseColab.GameObjects
 {
     public abstract class GameObjectBase : GameLoopMethods
     {
-        protected List<Point> Location { get; set; }
+        protected PointF Location { get; set; }
 
         protected Image Sprite { get; set; }
 
@@ -16,12 +16,12 @@ namespace TowerDefenseColab.GameObjects
             
         }
 
-        public void Spawn(List<Point> location)
+        public void Spawn(List<PointF> location)
         {
             //przekazuje liste waypointow
             Location = location;
         }
-
+        
         public override void Render(BufferedGraphics g)
         {
             //przekazuje mu pierwsza pozycje do spawnowania

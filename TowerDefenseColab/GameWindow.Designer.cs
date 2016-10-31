@@ -38,6 +38,9 @@
             this.Name = "GameWindow";
             this.Text = "GameWindow";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GameWindow_FormClosed);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameWindow_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameWindow_KeyUp);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GameWindow_MouseClick);
             this.ResumeLayout(false);
 
         }
