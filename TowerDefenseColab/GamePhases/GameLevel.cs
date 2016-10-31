@@ -9,28 +9,26 @@ namespace TowerDefenseColab.GamePhases
 {
     public class GameLevel : GameLoopMethods
     {
-        private readonly TimeSpan _spawnFrequency = TimeSpan.FromSeconds(1);
-        private readonly Image _background;
-        private readonly List<EnemyBase> _monsters = new List<EnemyBase>();
-        private readonly Queue<EnemyTypeEnum> _enemyTypesToSpawn;
+        private Image _background;
+        private readonly List<EnemyBase> _currentMonsters = new List<EnemyBase>();
+        private readonly GameLevelSettings _settings;
         private readonly EnemyFactory _enemyFactory;
-        private readonly PointF _location;
         private TimeSpan _lastSpawn = TimeSpan.Zero;
         private readonly Stopwatch _timeSinceStart = new Stopwatch();
         private readonly GamePhaseManager _gamePhaseManager;
+        private Queue<EnemyTypeEnum> _monstersLeftToSpawn;
 
-        public GameLevel(int levelNumber, IEnumerable<EnemyTypeEnum> enemyTypes, EnemyFactory enemyFactory,
-            PointF location, GamePhaseManager gamePhaseManager)
+        public GameLevel(GameLevelSettings settings, EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager)
         {
-            _background = Image.FromFile($@"Assets\bglvl{levelNumber}Path.png");
-            _enemyTypesToSpawn = new Queue<EnemyTypeEnum>(enemyTypes);
+            _settings = settings;
             _enemyFactory = enemyFactory;
-            _location = location;
             _gamePhaseManager = gamePhaseManager;
         }
 
         public override void Init()
         {
+            _monstersLeftToSpawn = new Queue<EnemyTypeEnum>(_settings.EnemyTypesToSpawn);
+            _background = Image.FromFile($@"Assets\bglvl{_settings.LevelNumber}Path.png");
             _timeSinceStart.Start();
         }
 
@@ -38,7 +36,7 @@ namespace TowerDefenseColab.GamePhases
         {
             // clearing screen
             g.Graphics.DrawImage(_background, 0, 0);
-            foreach (EnemyBase monster in _monsters)
+            foreach (EnemyBase monster in _currentMonsters)
             {
                 monster.Render(g);
             }
@@ -49,17 +47,17 @@ namespace TowerDefenseColab.GamePhases
             // Create a new enemy if appropriate.
             SpawnSomething();
 
-            if (_monsters.Count == 0 && _enemyTypesToSpawn.Count == 0)
+            if (_currentMonsters.Count == 0 && _monstersLeftToSpawn.Count == 0)
             {
                 _gamePhaseManager.LevelEnded(this);
             }
 
-            foreach (EnemyBase monster in _monsters.ToList())
+            foreach (EnemyBase monster in _currentMonsters.ToList())
             {
                 // "Despawn" if dead...
                 if (!monster.IsAlive)
                 {
-                    _monsters.Remove(monster);
+                    _currentMonsters.Remove(monster);
                 }
                 monster.Update(timeDelta);
             }
@@ -68,14 +66,14 @@ namespace TowerDefenseColab.GamePhases
         private void SpawnSomething()
         {
             var nao = _timeSinceStart.Elapsed;
-            bool shouldSpawnEnemy = _lastSpawn + _spawnFrequency <= nao;
-            if (_enemyTypesToSpawn.Count > 0 && shouldSpawnEnemy)
+            bool shouldSpawnEnemy = _lastSpawn + _settings.SpawnFrequency <= nao;
+            if (_monstersLeftToSpawn.Count > 0 && shouldSpawnEnemy)
             {
-                EnemyTypeEnum enemyType = _enemyTypesToSpawn.Dequeue();
+                EnemyTypeEnum enemyType = _monstersLeftToSpawn.Dequeue();
                 EnemyBase enemy = _enemyFactory.GetEnemy(enemyType);
                 enemy.Init();
-                enemy.Spawn(_location);
-                _monsters.Add(enemy);
+                enemy.Spawn(_settings.SpawnPoint);
+                _currentMonsters.Add(enemy);
                 _lastSpawn = nao;
             }
         }

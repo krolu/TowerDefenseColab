@@ -15,9 +15,9 @@ namespace TowerDefenseColab.GamePhases
             _gamePhaseManager = gamePhaseManager;
         }
 
-        public GameLevel CreateLevel(int levelNumber, IEnumerable<EnemyTypeEnum> enemyTypes, PointF location)
+        public GameLevel CreateLevel(GameLevelSettings levelSettings)
         {
-            return new GameLevel(levelNumber, enemyTypes, _enemyFactory, location, _gamePhaseManager);
+            return new GameLevel(levelSettings, _enemyFactory, _gamePhaseManager);
         }
     }
 }

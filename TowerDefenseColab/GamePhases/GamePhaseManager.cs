@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace TowerDefenseColab.GamePhases
 {
@@ -45,8 +46,14 @@ namespace TowerDefenseColab.GamePhases
         /// </summary>
         public void LevelEnded(GameLevel gameLevel)
         {
-            // TODO: Select the proper "next" pahse.
-            ChangeActiveGamePhase(GamePhaseEnum.Level002);
+            // Fugly way of selecting the next level.
+            int nextIndex = _gamePhases.Values.ToList().IndexOf(gameLevel) + 1;
+
+            GamePhaseEnum nextLevel = nextIndex >= _gamePhases.Count
+                ? GamePhaseEnum.StartScreen
+                : _gamePhases.Keys.ToList()[nextIndex];
+
+            ChangeActiveGamePhase(nextLevel);
         }
     }
 }
