@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using TowerDefenseColab.GameObjects;
+﻿using TowerDefenseColab.GameObjects;
 
 namespace TowerDefenseColab.GamePhases
 {
@@ -8,16 +6,18 @@ namespace TowerDefenseColab.GamePhases
     {
         private readonly EnemyFactory _enemyFactory;
         private readonly GamePhaseManager _gamePhaseManager;
+        private readonly InputManager _inputManager;
 
-        public GameLevelFactory(EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager)
+        public GameLevelFactory(EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager, InputManager inputManager)
         {
             _enemyFactory = enemyFactory;
             _gamePhaseManager = gamePhaseManager;
+            _inputManager = inputManager;
         }
 
-        public GameLevel CreateLevel(int levelNumber, IEnumerable<EnemyTypeEnum> enemyTypes, PointF location, List<PointF> waypoints)
+        public GameLevel CreateLevel(GameLevelSettings levelSettings)
         {
-            return new GameLevel(levelNumber, enemyTypes, _enemyFactory, location, waypoints, _gamePhaseManager);
+            return new GameLevel(levelSettings, _enemyFactory, _gamePhaseManager, _inputManager);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace TowerDefenseColab.GamePhases
+namespace TowerDefenseColab
 {
     public abstract class GameLoopMethods
     {

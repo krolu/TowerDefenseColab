@@ -3,65 +3,139 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 using TowerDefenseColab.GameObjects;
 
 namespace TowerDefenseColab.GamePhases
 {
-    public class GameLevel : GameLoopMethods
+    public class GameLevel : GamePhase
     {
-        private readonly TimeSpan _spawnFrequency = TimeSpan.FromSeconds(1);
-        private readonly Image _background;
-        private readonly List<EnemyBase> _monsters = new List<EnemyBase>();
-        private readonly Queue<EnemyTypeEnum> _enemyTypesToSpawn;
+        private Image _background;
+        private readonly List<EnemyBase> _currentMonsters = new List<EnemyBase>();
+        private readonly GameLevelSettings _settings;
         private readonly EnemyFactory _enemyFactory;
-        private readonly PointF _location;
-        private TimeSpan _lastSpawn = TimeSpan.Zero;
+        private TimeSpan _lastSpawn = TimeSpan.MinValue;
         private readonly Stopwatch _timeSinceStart = new Stopwatch();
         private readonly GamePhaseManager _gamePhaseManager;
-        private readonly List<PointF> _waypoints;
+        private readonly InputManager _inputManager;
+        private Queue<EnemyTypeEnum> _monstersLeftToSpawn;
+        private bool _isPaused = true;
+        private readonly List<TowerBase> _towers = new List<TowerBase>();
 
-        public GameLevel(int levelNumber, IEnumerable<EnemyTypeEnum> enemyTypes, EnemyFactory enemyFactory,
-            PointF location, List<PointF> waypoints, GamePhaseManager gamePhaseManager)
+        public GameLevel(GameLevelSettings settings, EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager,
+            InputManager inputManager)
         {
-            _background = Image.FromFile($@"Assets\bglvl{levelNumber}Path.png");
-            _enemyTypesToSpawn = new Queue<EnemyTypeEnum>(enemyTypes);
+            _settings = settings;
             _enemyFactory = enemyFactory;
-            _location = location;
             _gamePhaseManager = gamePhaseManager;
-            _waypoints = waypoints;
+            _inputManager = inputManager;
+            inputManager.OnKeyReleased += InputManagerOnOnKeyReleased;
+            inputManager.OnClick += InputManagerOnOnClick;
         }
+
+        private void InputManagerOnOnClick(MouseEventArgs mouseEventArgs)
+        {
+            if (IsVisible)
+            {
+                TowerBase placing = _towers.SingleOrDefault(t => t.TowerStateEnum == TowerStateEnum.Setup);
+                if (placing != null) placing.TowerStateEnum = TowerStateEnum.Active;
+            }
+        }
+
+        private void InputManagerOnOnKeyReleased(Keys key)
+        {
+            if (IsVisible)
+            {
+                switch (key)
+                {
+                    case Keys.Space:
+                        TogglePause();
+                        break;
+                    case Keys.D1:
+                        _towers.RemoveAll(t => t.TowerStateEnum == TowerStateEnum.Setup);
+                        var newTower = new TowerBase(_inputManager);
+                        newTower.Init();
+                        _towers.Add(newTower);
+                        break;
+                }
+            }
+        }
+
+        private void TogglePause()
+        {
+            _isPaused = !_isPaused;
+            if (_isPaused)
+            {
+                _timeSinceStart.Stop();
+            }
+            else
+            {
+                _timeSinceStart.Start();
+            }
+        }
+
 
         public override void Init()
         {
-            _timeSinceStart.Start();
+            _towers.Clear();
+            _isPaused = true;
+            _monstersLeftToSpawn = new Queue<EnemyTypeEnum>(_settings.EnemyTypesToSpawn);
+            _background = Image.FromFile($@"Assets\bglvl{_settings.LevelNumber}.png");
         }
 
         public override void Render(BufferedGraphics g)
         {
             // clearing screen
             g.Graphics.DrawImage(_background, 0, 0);
-            foreach (EnemyBase monster in _monsters)
+            foreach (EnemyBase monster in _currentMonsters)
             {
                 monster.Render(g);
+            }
+            foreach (TowerBase tower in _towers)
+            {
+                tower.Render(g);
+            }
+            // Show pause info.
+            if (_isPaused)
+            {
+                g.Graphics.DrawString("! PAUSED !", new Font("monospace", 20),
+                    new SolidBrush(Color.Blue), 300, 270);
+
+                g.Graphics.DrawString($"space - pause{Environment.NewLine}1 - new tower (click to place)",
+                    new Font("monospace", 10), new SolidBrush(Color.Blue), 370, 500);
             }
         }
 
         public override void Update(TimeSpan timeDelta)
         {
+            // Update the location of the tower being currently placed.
+            TowerBase placing = _towers.SingleOrDefault(t => t.TowerStateEnum == TowerStateEnum.Setup);
+            placing?.SetLocationCenter(_inputManager.GetMousePosition());
+
+            if (_isPaused)
+            {
+                return;
+            }
+
             // Create a new enemy if appropriate.
             SpawnSomething();
 
-            if (_monsters.Count == 0 && _enemyTypesToSpawn.Count == 0)
+            if (_currentMonsters.Count == 0 && _monstersLeftToSpawn.Count == 0)
             {
                 _gamePhaseManager.LevelEnded(this);
             }
 
-            foreach (EnemyBase monster in _monsters.ToList())
+            foreach (TowerBase tower in _towers)
+            {
+                tower.Update(timeDelta);
+            }
+
+            foreach (EnemyBase monster in _currentMonsters.ToList())
             {
                 // "Despawn" if dead...
                 if (!monster.IsAlive)
                 {
-                    _monsters.Remove(monster);
+                    _currentMonsters.Remove(monster);
                 }
                 monster.Update(timeDelta);
             }
@@ -70,15 +144,16 @@ namespace TowerDefenseColab.GamePhases
         private void SpawnSomething()
         {
             var nao = _timeSinceStart.Elapsed;
-            bool shouldSpawnEnemy = _lastSpawn + _spawnFrequency <= nao;
-            if (_enemyTypesToSpawn.Count > 0 && shouldSpawnEnemy)
+            bool isFirstSpawn = _lastSpawn == TimeSpan.MinValue;
+            // Spawn enemy if no enemy was spawned yet or if the time since last spawn is long enough.
+            bool shouldSpawnEnemy = (_lastSpawn + _settings.SpawnFrequency <= nao) || isFirstSpawn;
+            if (_monstersLeftToSpawn.Count > 0 && shouldSpawnEnemy)
             {
-                EnemyTypeEnum enemyType = _enemyTypesToSpawn.Dequeue();
+                EnemyTypeEnum enemyType = _monstersLeftToSpawn.Dequeue();
                 EnemyBase enemy = _enemyFactory.GetEnemy(enemyType);
                 enemy.Init();
-                enemy.Spawn(_location);
-                enemy.Waypoints = _waypoints;
-                _monsters.Add(enemy);
+                enemy.SetLocation(_settings.SpawnPoint);
+                _currentMonsters.Add(enemy);
                 _lastSpawn = nao;
             }
         }

@@ -11,15 +11,19 @@ namespace TowerDefenseColab
     public partial class GameWindow : Form
     {
         private readonly GamePhaseManager _phaseManager;
+        private readonly StartScreen _startScreen;
         private bool _isAlive = true;
         private readonly GameLevelFactory _gameLevelFactory;
-        private readonly InputManager _keyboardManager;
+        private readonly InputManager _inputManager;
 
-        public GameWindow(GamePhaseManager phaseManager, GameLevelFactory gameLevelFactory, InputManager keyboardManager)
+        public GameWindow(GamePhaseManager phaseManager, StartScreen startScreen, GameLevelFactory gameLevelFactory,
+            InputManager inputManager)
         {
             _phaseManager = phaseManager;
+            _startScreen = startScreen;
             _gameLevelFactory = gameLevelFactory;
-            _keyboardManager = keyboardManager;
+            _inputManager = inputManager;
+            _inputManager.SetMousePointFunction(() => PointToClient(Cursor.Position));
             InitializeComponent();
             Show();
         }
@@ -32,15 +36,28 @@ namespace TowerDefenseColab
 
         private void InitGame()
         {
-
-            var waypoints = new List<PointF>() { new PointF(260, 270), new PointF(260, 120), new PointF(575, 120), new PointF(575, 270), new PointF(800, 270)  };
+            var waypoints = new List<PointF>() {new PointF(0, 270)};
             // Create the pahses.
             // TODO: should it be even done here or by the PhageManager class itself?
+            _phaseManager.Add(GamePhaseEnum.StartScreen, _startScreen);
             _phaseManager.Add(GamePhaseEnum.Level001,
-                _gameLevelFactory.CreateLevel(1, new[] {EnemyTypeEnum.CircleOfDeath}, new PointF(0, 270), waypoints));
+                _gameLevelFactory.CreateLevel(new GameLevelSettings
+                {
+                    EnemyTypesToSpawn = new[] {EnemyTypeEnum.CircleOfDeath},
+                    SpawnPoint = new Point(0, 270),
+                    SpawnFrequency = TimeSpan.FromSeconds(1),
+                    LevelNumber = 1
+                }));
             _phaseManager.Add(GamePhaseEnum.Level002,
-                _gameLevelFactory.CreateLevel(2, new[] { EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath }, new PointF(0, 270), waypoints));
-            _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.Level001);
+                _gameLevelFactory.CreateLevel(new GameLevelSettings
+                {
+                    EnemyTypesToSpawn = new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath},
+                    SpawnPoint = new Point(0, 270),
+                    SpawnFrequency = TimeSpan.FromSeconds(1.5),
+                    LevelNumber = 2
+                }));
+
+            _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.StartScreen);
         }
 
         public void GameLoop()
@@ -76,17 +93,17 @@ namespace TowerDefenseColab
 
         private void GameWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            _keyboardManager.KeyPressed(e.KeyCode);
+            _inputManager.KeyPressed(e.KeyCode);
         }
 
         private void GameWindow_KeyUp(object sender, KeyEventArgs e)
         {
-            _keyboardManager.KeyReleased(e.KeyCode);
+            _inputManager.KeyReleased(e.KeyCode);
         }
 
         private void GameWindow_MouseClick(object sender, MouseEventArgs e)
         {
-            _keyboardManager.MouseClicked(e);
+            _inputManager.MouseClicked(e);
         }
     }
 }

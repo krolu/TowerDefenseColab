@@ -66,8 +66,11 @@
     <Compile Include="GamePhases\GameLevel.cs" />
     <Compile Include="GameLoopMethods.cs" />
     <Compile Include="GamePhases\GameLevelFactory.cs" />
+    <Compile Include="GamePhases\GameLevelSettings.cs" />
+    <Compile Include="GamePhases\GamePhase.cs" />
     <Compile Include="GamePhases\GamePhaseEnum.cs" />
     <Compile Include="GamePhases\GamePhaseManager.cs" />
+    <Compile Include="GamePhases\StartScreen.cs" />
     <Compile Include="GameWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,7 +122,12 @@
     <Content Include="Assets\circleOfDeath.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\menu.png" />
+    <Content Include="Assets\menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\squareOfPew.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

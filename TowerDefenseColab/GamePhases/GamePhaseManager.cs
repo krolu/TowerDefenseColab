@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace TowerDefenseColab.GamePhases
 {
     public class GamePhaseManager : GameLoopMethods
     {
-        private readonly Dictionary<GamePhaseEnum, GameLoopMethods> _gamePhases =
-            new Dictionary<GamePhaseEnum, GameLoopMethods>();
+        private readonly Dictionary<GamePhaseEnum, GamePhase> _gamePhases =
+            new Dictionary<GamePhaseEnum, GamePhase>();
 
-        private GameLoopMethods _activeGamePhase;
+        private GamePhase _activeGamePhase;
 
-        public void Add(GamePhaseEnum phaseType, GameLoopMethods gamePhase)
+        public void Add(GamePhaseEnum phaseType, GamePhase gamePhase)
         {
             _gamePhases.Add(phaseType, gamePhase);
         }
@@ -26,8 +27,14 @@ namespace TowerDefenseColab.GamePhases
         /// </summary>
         public void ChangeActiveGamePhase(GamePhaseEnum gamePhase)
         {
+            if (_activeGamePhase != null)
+            {
+                _activeGamePhase.IsVisible = false;
+            }
+
             _activeGamePhase = _gamePhases[gamePhase];
             _activeGamePhase.Init();
+            _activeGamePhase.IsVisible = true;
         }
 
         public override void Update(TimeSpan timeDelta)
@@ -45,8 +52,14 @@ namespace TowerDefenseColab.GamePhases
         /// </summary>
         public void LevelEnded(GameLevel gameLevel)
         {
-            // TODO: Select the proper "next" pahse.
-            ChangeActiveGamePhase(GamePhaseEnum.Level002);
+            // Fugly way of selecting the next level.
+            // Assumes levels are at the end of the _gamePhases dictionary.
+            int nextIndex = _gamePhases.Values.ToList().IndexOf(gameLevel) + 1;
+            GamePhaseEnum nextLevel = nextIndex >= _gamePhases.Count
+                ? GamePhaseEnum.StartScreen
+                : _gamePhases.Keys.ToList()[nextIndex];
+
+            ChangeActiveGamePhase(nextLevel);
         }
     }
 }
