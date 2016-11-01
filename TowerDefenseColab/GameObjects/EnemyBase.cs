@@ -13,7 +13,7 @@ namespace TowerDefenseColab.GameObjects
         /// </summary>
         protected float Speed { private get; set; }
 
-        public bool IsAlive { get; set; } = true;
+        protected float Health { get; set; } = 1;
 
         public List<PointF> Waypoints { get; set; }
 
@@ -89,6 +89,16 @@ namespace TowerDefenseColab.GameObjects
         private void Die()
         {
             IsAlive = false;
+        }
+
+        // Thie enemy was shot by the tower.
+        public void Shot(TowerBase towerBase)
+        {
+            Health -= towerBase.Settings.Powah;
+            if (Health <= 0)
+            {
+                Die();
+            }
         }
     }
 }

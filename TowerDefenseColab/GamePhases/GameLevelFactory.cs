@@ -1,23 +1,20 @@
-﻿using TowerDefenseColab.GameObjects;
+﻿using StructureMap;
+using TowerDefenseColab.GameObjects;
 
 namespace TowerDefenseColab.GamePhases
 {
     public class GameLevelFactory
     {
-        private readonly EnemyFactory _enemyFactory;
-        private readonly GamePhaseManager _gamePhaseManager;
-        private readonly InputManager _inputManager;
+        private readonly IContainer _container;
 
-        public GameLevelFactory(EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager, InputManager inputManager)
+        public GameLevelFactory(IContainer container)
         {
-            _enemyFactory = enemyFactory;
-            _gamePhaseManager = gamePhaseManager;
-            _inputManager = inputManager;
+            _container = container;
         }
 
         public GameLevel CreateLevel(GameLevelSettings levelSettings)
         {
-            return new GameLevel(levelSettings, _enemyFactory, _gamePhaseManager, _inputManager);
+            return _container.With("settings").EqualTo(levelSettings).GetInstance<GameLevel>();
         }
     }
 }

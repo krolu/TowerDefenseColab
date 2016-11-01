@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,24 +10,26 @@ namespace TowerDefenseColab.GamePhases
     public class GameLevel : GamePhase
     {
         private Image _background;
-        private readonly List<EnemyBase> _currentMonsters = new List<EnemyBase>();
+        public readonly List<EnemyBase> CurrentMonsters = new List<EnemyBase>();
         private readonly GameLevelSettings _settings;
         private readonly EnemyFactory _enemyFactory;
         private TimeSpan _lastSpawn = TimeSpan.MinValue;
-        private readonly Stopwatch _timeSinceStart = new Stopwatch();
         private readonly GamePhaseManager _gamePhaseManager;
         private readonly InputManager _inputManager;
+        private readonly TowerFactory _towerFactory;
+        private readonly GameLevelTime _time = new GameLevelTime();
         private Queue<EnemyTypeEnum> _monstersLeftToSpawn;
         private bool _isPaused = true;
         private readonly List<TowerBase> _towers = new List<TowerBase>();
 
         public GameLevel(GameLevelSettings settings, EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager,
-            InputManager inputManager)
+            InputManager inputManager, TowerFactory towerFactory)
         {
             _settings = settings;
             _enemyFactory = enemyFactory;
             _gamePhaseManager = gamePhaseManager;
             _inputManager = inputManager;
+            _towerFactory = towerFactory;
             inputManager.OnKeyReleased += InputManagerOnOnKeyReleased;
             inputManager.OnClick += InputManagerOnOnClick;
         }
@@ -53,7 +54,12 @@ namespace TowerDefenseColab.GamePhases
                         break;
                     case Keys.D1:
                         _towers.RemoveAll(t => t.TowerStateEnum == TowerStateEnum.Setup);
-                        var newTower = new TowerBase(_inputManager);
+                        TowerBase newTower = _towerFactory.GetTower(_time, this, new TowerSettings
+                        {
+                            Powah = 1,
+                            RangePixels = 100,
+                            ShootFrequency = TimeSpan.FromSeconds(1)
+                        });
                         newTower.Init();
                         _towers.Add(newTower);
                         break;
@@ -66,11 +72,11 @@ namespace TowerDefenseColab.GamePhases
             _isPaused = !_isPaused;
             if (_isPaused)
             {
-                _timeSinceStart.Stop();
+                _time.Stop();
             }
             else
             {
-                _timeSinceStart.Start();
+                _time.Start();
             }
         }
 
@@ -87,7 +93,7 @@ namespace TowerDefenseColab.GamePhases
         {
             // clearing screen
             g.Graphics.DrawImage(_background, 0, 0);
-            foreach (EnemyBase monster in _currentMonsters)
+            foreach (EnemyBase monster in CurrentMonsters)
             {
                 monster.Render(g);
             }
@@ -104,6 +110,9 @@ namespace TowerDefenseColab.GamePhases
                 g.Graphics.DrawString($"space - pause{Environment.NewLine}1 - new tower (click to place)",
                     new Font("monospace", 10), new SolidBrush(Color.Blue), 370, 500);
             }
+
+            g.Graphics.DrawString($"{_time.GetCurrent()}",
+                new Font("monospace", 10), new SolidBrush(Color.Blue), 10, 0);
         }
 
         public override void Update(TimeSpan timeDelta)
@@ -120,9 +129,10 @@ namespace TowerDefenseColab.GamePhases
             // Create a new enemy if appropriate.
             SpawnSomething();
 
-            if (_currentMonsters.Count == 0 && _monstersLeftToSpawn.Count == 0)
+            if (CurrentMonsters.Count == 0 && _monstersLeftToSpawn.Count == 0)
             {
                 _gamePhaseManager.LevelEnded(this);
+                return;
             }
 
             foreach (TowerBase tower in _towers)
@@ -130,12 +140,12 @@ namespace TowerDefenseColab.GamePhases
                 tower.Update(timeDelta);
             }
 
-            foreach (EnemyBase monster in _currentMonsters.ToList())
+            foreach (EnemyBase monster in CurrentMonsters.ToList())
             {
                 // "Despawn" if dead...
                 if (!monster.IsAlive)
                 {
-                    _currentMonsters.Remove(monster);
+                    CurrentMonsters.Remove(monster);
                 }
                 monster.Update(timeDelta);
             }
@@ -143,7 +153,7 @@ namespace TowerDefenseColab.GamePhases
 
         private void SpawnSomething()
         {
-            var nao = _timeSinceStart.Elapsed;
+            TimeSpan nao = _time.GetCurrent();
             bool isFirstSpawn = _lastSpawn == TimeSpan.MinValue;
             // Spawn enemy if no enemy was spawned yet or if the time since last spawn is long enough.
             bool shouldSpawnEnemy = (_lastSpawn + _settings.SpawnFrequency <= nao) || isFirstSpawn;
@@ -154,7 +164,7 @@ namespace TowerDefenseColab.GamePhases
                 enemy.Init();
                 enemy.SetLocation(_settings.SpawnPoint);
                 enemy.Waypoints = _settings.Waypoints;
-                _currentMonsters.Add(enemy);
+                CurrentMonsters.Add(enemy);
                 _lastSpawn = nao;
             }
         }
