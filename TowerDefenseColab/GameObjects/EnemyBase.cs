@@ -15,6 +15,8 @@ namespace TowerDefenseColab.GameObjects
 
         protected float Health { get; set; } = 1;
 
+        public bool IsAlive { get; private set; } = true;
+
         public List<PointF> Waypoints { get; set; }
 
         private PointF currentTarget { get; set; }
@@ -34,7 +36,7 @@ namespace TowerDefenseColab.GameObjects
             //get current waypoint
             currentTarget = Waypoints[currentTargetIndex];
 
-            var monsterLocation = new Vector2(Location.X, Location.Y);
+            var monsterLocation = new Vector2(LocationTopLeft.X, LocationTopLeft.Y);
             var target = new Vector2(currentTarget.X, currentTarget.Y);
 
             //calculate distance
@@ -65,13 +67,13 @@ namespace TowerDefenseColab.GameObjects
                 }
 
                 if (target.Y > Math.Round(monsterLocation.Y))
-                    Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
+                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X + deltaX, LocationTopLeft.Y + deltaY);
                 else if (target.Y < Math.Round(monsterLocation.Y))
-                    Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y - deltaY);
+                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X + deltaX, LocationTopLeft.Y - deltaY);
                 else if (target.X > Math.Round(monsterLocation.X))
-                    Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
+                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X + deltaX, LocationTopLeft.Y + deltaY);
                 else if (target.X < Math.Round(monsterLocation.X))
-                    Location = new System.Drawing.PointF(Location.X - deltaX, Location.Y + deltaY);
+                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X - deltaX, LocationTopLeft.Y + deltaY);
             }
             else
             {
@@ -80,7 +82,7 @@ namespace TowerDefenseColab.GameObjects
             }
 
             //TODO: need to check if map end is at axis Y
-            if (Location.X > 795)
+            if (LocationTopLeft.X > 795)
             {
                 Die();
             }
