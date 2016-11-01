@@ -80,7 +80,7 @@ namespace TowerDefenseColab.GamePhases
             _towers.Clear();
             _isPaused = true;
             _monstersLeftToSpawn = new Queue<EnemyTypeEnum>(_settings.EnemyTypesToSpawn);
-            _background = Image.FromFile($@"Assets\bglvl{_settings.LevelNumber}.png");
+            _background = Image.FromFile($@"Assets\bglvl{_settings.LevelNumber}Path.png");
         }
 
         public override void Render(BufferedGraphics g)
@@ -153,6 +153,7 @@ namespace TowerDefenseColab.GamePhases
                 EnemyBase enemy = _enemyFactory.GetEnemy(enemyType);
                 enemy.Init();
                 enemy.SetLocation(_settings.SpawnPoint);
+                enemy.Waypoints = _settings.Waypoints;
                 _currentMonsters.Add(enemy);
                 _lastSpawn = nao;
             }

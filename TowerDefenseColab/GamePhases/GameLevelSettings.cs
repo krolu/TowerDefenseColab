@@ -10,7 +10,7 @@ namespace TowerDefenseColab.GamePhases
         public int LevelNumber { get; set; }
         public TimeSpan SpawnFrequency { get; set; }
         public IEnumerable<EnemyTypeEnum> EnemyTypesToSpawn { get; set; }
-
+        public List<PointF> Waypoints { get; set; }
         public Point SpawnPoint { get; set; }
     }
 }

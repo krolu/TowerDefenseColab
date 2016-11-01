@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
 
 namespace TowerDefenseColab.GameObjects
 {
@@ -12,17 +15,72 @@ namespace TowerDefenseColab.GameObjects
 
         public bool IsAlive { get; set; } = true;
 
+        public List<PointF> Waypoints { get; set; }
+
+        private PointF currentTarget { get; set; }
+
+        private int currentTargetIndex { get; set; } = 0;
+
         public override void Init()
         {
         }
 
         public override void Update(TimeSpan timeDelta)
         {
-            var deltaX = Speed*(float) timeDelta.TotalSeconds;
-            var deltaY = 0;
-            Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
+            //var deltaX = Speed*(float) timeDelta.TotalSeconds;
+            float deltaX = 0;
+            float deltaY = 0;
 
-            if (Location.X > 800)
+            //get current waypoint
+            currentTarget = Waypoints[currentTargetIndex];
+
+            var monsterLocation = new Vector2(Location.X, Location.Y);
+            var target = new Vector2(currentTarget.X, currentTarget.Y);
+
+            //calculate distance
+            var distance = Vector2.Distance(monsterLocation, target);
+
+            //check if monster is near target X for +- 1 pixel
+            if (target.X - 1 <= monsterLocation.X && target.X + 1 >= monsterLocation.X)
+            {
+                deltaY = Speed * (float) timeDelta.TotalSeconds;
+                //deltaY = Speed * (float)0.0124125;
+
+            }
+            //check if monster is near target Y for +- 1 pixel
+            if (target.Y - 1 <= monsterLocation.Y && target.Y + 1 >= monsterLocation.Y)
+            {
+                deltaX = Speed * (float) timeDelta.TotalSeconds;
+                //deltaX = Speed * (float)0.0124125;
+            }
+
+            //if monster distance is more equal 1 pixel to target
+            if (distance >= 1)
+            {
+                //if monster distance to target is about 4 - 0,5 pixels then deltaX/Y divide by 2 or may be set for const int
+                if (distance <= 4 && distance >= 0.5)
+                {
+                    deltaX /= 2;
+                    deltaY /= 2;
+                }
+
+                if (target.Y > Math.Round(monsterLocation.Y))
+                    Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
+                else if (target.Y < Math.Round(monsterLocation.Y))
+                    Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y - deltaY);
+                else if (target.X > Math.Round(monsterLocation.X))
+                    Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
+                else if (target.X < Math.Round(monsterLocation.X))
+                    Location = new System.Drawing.PointF(Location.X - deltaX, Location.Y + deltaY);
+            }
+            else
+            {
+                //if monster distance is less than 1 pixel to target increment waypoints index
+                currentTargetIndex++;
+            }
+
+            //TODO: need to check if map end is at axis Y
+            if (Location.X > 795)
             {
                 Die();
             }

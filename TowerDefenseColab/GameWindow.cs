@@ -36,17 +36,20 @@ namespace TowerDefenseColab
 
         private void InitGame()
         {
-            var waypoints = new List<PointF>() {new PointF(0, 270)};
+            var waypoints1 = new List<PointF>() { new PointF(260, 270), new PointF(260, 120), new PointF(575, 120), new PointF(575, 270), new PointF(800, 270) };
+            var waypoints2 = new List<PointF>() { new PointF(260, 270), new PointF(260, 120), new PointF(575, 120), new PointF(575, 270), new PointF(365, 270), new PointF(365, 510), new PointF(680, 510), new PointF(680, 160), new PointF(800, 160) };
             // Create the pahses.
             // TODO: should it be even done here or by the PhageManager class itself?
             _phaseManager.Add(GamePhaseEnum.StartScreen, _startScreen);
             _phaseManager.Add(GamePhaseEnum.Level001,
                 _gameLevelFactory.CreateLevel(new GameLevelSettings
                 {
-                    EnemyTypesToSpawn = new[] {EnemyTypeEnum.CircleOfDeath},
+                    EnemyTypesToSpawn = new[] { EnemyTypeEnum.CircleOfDeath },
                     SpawnPoint = new Point(0, 270),
                     SpawnFrequency = TimeSpan.FromSeconds(1),
-                    LevelNumber = 1
+                    LevelNumber = 1,
+                    Waypoints = waypoints1
+
                 }));
             _phaseManager.Add(GamePhaseEnum.Level002,
                 _gameLevelFactory.CreateLevel(new GameLevelSettings
@@ -54,7 +57,8 @@ namespace TowerDefenseColab
                     EnemyTypesToSpawn = new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath},
                     SpawnPoint = new Point(0, 270),
                     SpawnFrequency = TimeSpan.FromSeconds(1.5),
-                    LevelNumber = 2
+                    LevelNumber = 2,
+                    Waypoints = waypoints2
                 }));
 
             _phaseManager.ChangeActiveGamePhase(GamePhaseEnum.StartScreen);
