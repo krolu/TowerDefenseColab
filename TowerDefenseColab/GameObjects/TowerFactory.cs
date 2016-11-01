@@ -16,7 +16,7 @@ namespace TowerDefenseColab.GameObjects
         public TowerBase GetTower(GameLevelTime time, GameLevel gameLevel, TowerSettings towerSettings)
         {
             return _container
-                .With("time").EqualTo(time)
+                .With("gameLevelTime").EqualTo(time)
                 .With("gameLevel").EqualTo(gameLevel)
                 .With("settings").EqualTo(towerSettings)
                 .GetInstance<TowerBase>();

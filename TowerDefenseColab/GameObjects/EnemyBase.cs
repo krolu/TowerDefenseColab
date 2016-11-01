@@ -36,7 +36,7 @@ namespace TowerDefenseColab.GameObjects
             //get current waypoint
             currentTarget = Waypoints[currentTargetIndex];
 
-            var monsterLocation = new Vector2(LocationTopLeft.X, LocationTopLeft.Y);
+            var monsterLocation = new Vector2(LocationCenter.X, LocationCenter.Y);
             var target = new Vector2(currentTarget.X, currentTarget.Y);
 
             //calculate distance
@@ -45,14 +45,13 @@ namespace TowerDefenseColab.GameObjects
             //check if monster is near target X for +- 1 pixel
             if (target.X - 1 <= monsterLocation.X && target.X + 1 >= monsterLocation.X)
             {
-                deltaY = Speed * (float) timeDelta.TotalSeconds;
+                deltaY = Speed*(float) timeDelta.TotalSeconds;
                 //deltaY = Speed * (float)0.0124125;
-
             }
             //check if monster is near target Y for +- 1 pixel
             if (target.Y - 1 <= monsterLocation.Y && target.Y + 1 >= monsterLocation.Y)
             {
-                deltaX = Speed * (float) timeDelta.TotalSeconds;
+                deltaX = Speed*(float) timeDelta.TotalSeconds;
                 //deltaX = Speed * (float)0.0124125;
             }
 
@@ -67,13 +66,13 @@ namespace TowerDefenseColab.GameObjects
                 }
 
                 if (target.Y > Math.Round(monsterLocation.Y))
-                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X + deltaX, LocationTopLeft.Y + deltaY);
+                    LocationCenter = new System.Drawing.PointF(LocationCenter.X + deltaX, LocationCenter.Y + deltaY);
                 else if (target.Y < Math.Round(monsterLocation.Y))
-                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X + deltaX, LocationTopLeft.Y - deltaY);
+                    LocationCenter = new System.Drawing.PointF(LocationCenter.X + deltaX, LocationCenter.Y - deltaY);
                 else if (target.X > Math.Round(monsterLocation.X))
-                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X + deltaX, LocationTopLeft.Y + deltaY);
+                    LocationCenter = new System.Drawing.PointF(LocationCenter.X + deltaX, LocationCenter.Y + deltaY);
                 else if (target.X < Math.Round(monsterLocation.X))
-                    LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X - deltaX, LocationTopLeft.Y + deltaY);
+                    LocationCenter = new System.Drawing.PointF(LocationCenter.X - deltaX, LocationCenter.Y + deltaY);
             }
             else
             {
@@ -82,7 +81,7 @@ namespace TowerDefenseColab.GameObjects
             }
 
             //TODO: need to check if map end is at axis Y
-            if (LocationTopLeft.X > 795)
+            if (LocationCenter.X > 795)
             {
                 Die();
             }

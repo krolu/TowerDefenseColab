@@ -5,18 +5,21 @@ namespace TowerDefenseColab.GameObjects
 {
     public abstract class GameObjectBase : GameLoopMethods
     {
-        protected PointF LocationTopLeft { get; set; }
+        protected PointF LocationCenter { get; set; }
 
-        protected Image Sprite { get; set; }
+        private PointF LocationTopLeft
+            => new PointF(LocationCenter.X - (float) Sprite.Width/2, LocationCenter.Y - (float) Sprite.Height/2);
+
+        protected Image Sprite { private get; set; }
 
         public void SetLocation(Point location)
         {
-            LocationTopLeft = location;
+            LocationCenter = location;
         }
 
         public void SetLocationCenter(Point location)
         {
-            LocationTopLeft = new PointF(location.X - Sprite.Width/2, location.Y - Sprite.Height/2);
+            LocationCenter = new PointF(location.X - Sprite.Width/2, location.Y - Sprite.Height/2);
         }
 
         public override void Render(BufferedGraphics g)
@@ -26,8 +29,8 @@ namespace TowerDefenseColab.GameObjects
 
         public float GetDistance(GameObjectBase other)
         {
-            float pow = (LocationTopLeft.X - other.LocationTopLeft.X)*(LocationTopLeft.X - other.LocationTopLeft.X) +
-                        (LocationTopLeft.Y - other.LocationTopLeft.Y)*(LocationTopLeft.Y - other.LocationTopLeft.Y);
+            float pow = (LocationCenter.X - other.LocationCenter.X)*(LocationCenter.X - other.LocationCenter.X) +
+                        (LocationCenter.Y - other.LocationCenter.Y)*(LocationCenter.Y - other.LocationCenter.Y);
             return (float) Math.Sqrt(pow);
         }
     }

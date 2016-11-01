@@ -7,7 +7,7 @@ namespace TowerDefenseColab.GameObjects
         public override void Init()
         {
             Sprite = Image.FromFile("Assets\\circleOfDeath.png");
-            Speed = 100f;
+            Speed = 200f;
             Health = 3;
         }
 
@@ -16,7 +16,7 @@ namespace TowerDefenseColab.GameObjects
             base.Render(g);
 
             g.Graphics.DrawString($"{Health}", new Font("monospace", 10),
-                new SolidBrush(Color.Blue), LocationTopLeft.X, LocationTopLeft.Y - 10);
+                new SolidBrush(Color.Blue), LocationCenter.X, LocationCenter.Y - 10);
         }
     }
 }

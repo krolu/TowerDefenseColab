@@ -7,9 +7,16 @@ namespace TowerDefenseColab.GamePhases
     {
         private readonly Stopwatch _time = new Stopwatch();
 
+        private TimeSpan _offset = TimeSpan.Zero;
+
         public TimeSpan GetCurrent()
         {
-            return _time.Elapsed;
+            return _time.Elapsed + _offset;
+        }
+
+        public void SkipTime(TimeSpan timeToSkip)
+        {
+            _offset += timeToSkip;
         }
 
         public void Start()

@@ -33,7 +33,7 @@ namespace TowerDefenseColab.GameObjects
             switch (TowerStateEnum)
             {
                 case TowerStateEnum.Setup:
-                    LocationTopLeft = _inputManager.GetMousePosition();
+                    LocationCenter = _inputManager.GetMousePosition();
                     break;
                 case TowerStateEnum.Active:
                     if (_shootLimiter.CanDoStuff())
@@ -50,8 +50,8 @@ namespace TowerDefenseColab.GameObjects
         {
             base.Render(g);
 
-            g.Graphics.DrawEllipse(Pens.Bisque, LocationTopLeft.X - Settings.RangePixels,
-                LocationTopLeft.Y - Settings.RangePixels,
+            g.Graphics.DrawEllipse(Pens.Bisque, LocationCenter.X - Settings.RangePixels,
+                LocationCenter.Y - Settings.RangePixels,
                 Settings.RangePixels*2, Settings.RangePixels*2);
         }
 
