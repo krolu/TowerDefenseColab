@@ -10,7 +10,9 @@ namespace TowerDefenseColab.GameObjects
         /// </summary>
         protected float Speed { private get; set; }
 
-        public bool IsAlive { get; set; } = true;
+        protected float Health { get; set; } = 1;
+
+        public bool IsAlive { get; private set; } = true;
 
         public override void Init()
         {
@@ -20,9 +22,9 @@ namespace TowerDefenseColab.GameObjects
         {
             var deltaX = Speed*(float) timeDelta.TotalSeconds;
             var deltaY = 0;
-            Location = new System.Drawing.PointF(Location.X + deltaX, Location.Y + deltaY);
+            LocationTopLeft = new System.Drawing.PointF(LocationTopLeft.X + deltaX, LocationTopLeft.Y + deltaY);
 
-            if (Location.X > 800)
+            if (LocationTopLeft.X > 800)
             {
                 Die();
             }
@@ -31,6 +33,16 @@ namespace TowerDefenseColab.GameObjects
         private void Die()
         {
             IsAlive = false;
+        }
+
+        // Thie enemy was shot by the tower.
+        public void Shot(TowerBase towerBase)
+        {
+            Health -= towerBase.Settings.Powah;
+            if (Health <= 0)
+            {
+                Die();
+            }
         }
     }
 }

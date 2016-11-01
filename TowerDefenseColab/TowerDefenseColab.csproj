@@ -61,12 +61,16 @@
     <Compile Include="GameObjects\EnemyTypeEnum.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
     <Compile Include="GameObjects\TowerBase.cs" />
+    <Compile Include="GameObjects\TowerFactory.cs" />
+    <Compile Include="GameObjects\TowerSettings.cs" />
     <Compile Include="GameObjects\TowerStateEnum.cs" />
     <Compile Include="GameObjects\Weapon.cs" />
     <Compile Include="GamePhases\GameLevel.cs" />
     <Compile Include="GameLoopMethods.cs" />
     <Compile Include="GamePhases\GameLevelFactory.cs" />
     <Compile Include="GamePhases\GameLevelSettings.cs" />
+    <Compile Include="GamePhases\GameLevelActionLimiter.cs" />
+    <Compile Include="GamePhases\GameLevelTime.cs" />
     <Compile Include="GamePhases\GamePhase.cs" />
     <Compile Include="GamePhases\GamePhaseEnum.cs" />
     <Compile Include="GamePhases\GamePhaseManager.cs" />

@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Windows.Forms;
 using StructureMap;
+using TowerDefenseColab.GameObjects;
+using TowerDefenseColab.GamePhases;
 
 namespace TowerDefenseColab
 {
     static class Program
     {
-        private static Container GetIoC()
-        {
-            return new Container(_ => _.Scan(x =>
-            {
-                x.TheCallingAssembly();
-                x.WithDefaultConventions();
-            }));
-        }
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            var ioc = GetIoC();
+            Container ioc = GetIoC();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -29,6 +22,17 @@ namespace TowerDefenseColab
             {
                 gw.GameLoop();
             }
+        }
+
+        private static Container GetIoC()
+        {
+            return new Container(_ =>
+            {
+                _.ForSingletonOf<GamePhaseManager>();
+                _.ForSingletonOf<InputManager>();
+                _.ForSingletonOf<GameLevelFactory>();
+                _.ForSingletonOf<EnemyFactory>();
+            });
         }
     }
 }
