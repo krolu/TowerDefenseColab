@@ -50,7 +50,7 @@ namespace TowerDefenseColab.GamePhases
         /// <summary>
         /// Called by the level itself when it finishes.
         /// </summary>
-        public void LevelEnded(GameLevel gameLevel)
+        public void LevelEndedPlayerWon(GameLevel gameLevel)
         {
             // Fugly way of selecting the next level.
             // Assumes levels are at the end of the _gamePhases dictionary.
@@ -60,6 +60,14 @@ namespace TowerDefenseColab.GamePhases
                 : _gamePhases.Keys.ToList()[nextIndex];
 
             ChangeActiveGamePhase(nextLevel);
+        }
+
+        public void LevelEndedPlayerLost(GameLevel gameLevel)
+        {
+            // Again a fugly way of doing this.
+            // Re-initialize current game pahse.
+            int currentIndex = _gamePhases.Values.ToList().IndexOf(_activeGamePhase);
+            ChangeActiveGamePhase(_gamePhases.Keys.ToList()[currentIndex]);
         }
     }
 }

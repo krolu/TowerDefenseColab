@@ -74,6 +74,7 @@
     <Compile Include="GamePhases\GamePhase.cs" />
     <Compile Include="GamePhases\GamePhaseEnum.cs" />
     <Compile Include="GamePhases\GamePhaseManager.cs" />
+    <Compile Include="GamePhases\GameState.cs" />
     <Compile Include="GamePhases\StartScreen.cs" />
     <Compile Include="GameWindow.cs">
       <SubType>Form</SubType>

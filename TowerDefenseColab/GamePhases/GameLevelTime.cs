@@ -28,5 +28,10 @@ namespace TowerDefenseColab.GamePhases
         {
             _time.Stop();
         }
+
+        internal void Reset()
+        {
+            _time.Reset();
+        }
     }
 }
