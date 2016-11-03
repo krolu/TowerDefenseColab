@@ -175,7 +175,7 @@ namespace TowerDefenseColab.GamePhases
                 }
 
                 // "Despawn" if dead...
-                if (!monster.IsAlive)
+                if (!monster.IsVisible)
                 {
                     CurrentMonsters.Remove(monster);
                 }

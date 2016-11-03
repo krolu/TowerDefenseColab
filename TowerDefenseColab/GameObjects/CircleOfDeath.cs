@@ -9,6 +9,8 @@ namespace TowerDefenseColab.GameObjects
     {
         public override void Init()
         {
+            base.Init();
+
             Sprite = Image.FromFile("Assets\\sprite1.png");
             Speed = 200f;
             Health = 3;
@@ -24,14 +26,16 @@ namespace TowerDefenseColab.GameObjects
         public override void Update(TimeSpan timeDelta)
         {
             base.Update(timeDelta);
-            AnimSprite.Update(timeDelta, LocationCenter);
+            AnimatedSprite sprite = IsAlive ? AnimSprite : AnimSpriteDeath;
+            sprite.Update(timeDelta, LocationCenter);
         }
 
         public override void Render(BufferedGraphics g)
         {
             //base.Render(g);
 
-            AnimSprite.Render(g.Graphics);
+            AnimatedSprite sprite = IsAlive ? AnimSprite : AnimSpriteDeath;
+            sprite.Render(g.Graphics);
 
             g.Graphics.DrawString($"{Health}", new Font("monospace", 10),
                 new SolidBrush(Color.Blue), LocationCenter.X, LocationCenter.Y - 10);

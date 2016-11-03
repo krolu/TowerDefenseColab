@@ -6,7 +6,9 @@ namespace TowerDefenseColab.GameMechanisms
     {
         public int FirstFrameIndex { get; set; }
         public int LastFrameIndex { get; set; }
-        
+
+        public TimeSpan AnimationTime => TimeSpan.FromMilliseconds(_framesCount * _frameTime);
+
         /// <summary>
         /// frames per second
         /// </summary>

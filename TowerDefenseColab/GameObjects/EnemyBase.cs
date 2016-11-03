@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using TowerDefenseColab.GameMechanisms;
 
 namespace TowerDefenseColab.GameObjects
 {
@@ -17,9 +18,15 @@ namespace TowerDefenseColab.GameObjects
 
         public bool IsAlive { get; private set; } = true;
 
+        public bool IsVisible { get; private set; } = true;
+
+        public TimeSpan AgonyPeriod { get; private set; }
+
         public List<PointF> Waypoints { get; set; }
 
         public AnimatedSprite AnimSprite { get; set; }
+
+        public AnimatedSprite AnimSpriteDeath { get; set; }
 
         private PointF currentTarget { get; set; }
 
@@ -33,10 +40,32 @@ namespace TowerDefenseColab.GameObjects
         public override void Init()
         {
             FoundPointG = false;
+            AnimSpriteDeath = new AnimatedSprite(Image.FromFile("Assets\\boom.png"), new Size(60, 45));
+            AnimSpriteDeath.Animations = new List<Animation>()
+            {
+                new Animation(0, 3, 10f)
+            };
+            AnimSpriteDeath.CurrentAnimation = AnimSpriteDeath.Animations[0];
+
+            // How long will this enemy will be visible after death.
+            AgonyPeriod = AnimSpriteDeath.CurrentAnimation.AnimationTime;
         }
 
         public override void Update(TimeSpan timeDelta)
         {
+            // Already dead?
+            if (!IsAlive)
+            {
+                // Decrease it's agony timer.
+                AgonyPeriod -= timeDelta;
+                if (AgonyPeriod <= TimeSpan.Zero)
+                {
+                    // Agnony ended? Hide/remove him.
+                    IsVisible = false;
+                }
+                return;
+            }
+
             //var deltaX = Speed*(float) timeDelta.TotalSeconds;
             float deltaX = 0;
             float deltaY = 0;

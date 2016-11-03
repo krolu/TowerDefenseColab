@@ -126,6 +126,9 @@
     <Content Include="Assets\bglvl1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\boom.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\circleOfDeath.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
