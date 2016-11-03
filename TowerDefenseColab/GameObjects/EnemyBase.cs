@@ -19,12 +19,15 @@ namespace TowerDefenseColab.GameObjects
 
         public List<PointF> Waypoints { get; set; }
 
+        public AnimatedSprite AnimSprite { get; set; }
+
         private PointF currentTarget { get; set; }
 
         private int currentTargetIndex { get; set; } = 0;
-
+        
         public override void Init()
         {
+            
         }
 
         public override void Update(TimeSpan timeDelta)

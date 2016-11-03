@@ -55,11 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameMechanisms\Animation.cs" />
     <Compile Include="GameObjects\CircleOfDeath.cs" />
     <Compile Include="GameObjects\EnemyBase.cs" />
     <Compile Include="GameObjects\EnemyFactory.cs" />
     <Compile Include="GameObjects\EnemyTypeEnum.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
+    <Compile Include="GameObjects\AnimatedSprite.cs" />
     <Compile Include="GameObjects\TowerBase.cs" />
     <Compile Include="GameObjects\TowerFactory.cs" />
     <Compile Include="GameObjects\TowerSettings.cs" />
@@ -127,6 +129,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\sprite1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\squareOfPew.png">

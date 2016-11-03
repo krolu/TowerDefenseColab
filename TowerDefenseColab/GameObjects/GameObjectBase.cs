@@ -10,7 +10,7 @@ namespace TowerDefenseColab.GameObjects
         private PointF LocationTopLeft
             => new PointF(LocationCenter.X - (float) Sprite.Width/2, LocationCenter.Y - (float) Sprite.Height/2);
 
-        protected Image Sprite { private get; set; }
+        public Image Sprite { get; set; }
 
         public void SetLocation(Point location)
         {
