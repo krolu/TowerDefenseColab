@@ -7,6 +7,8 @@ using TowerDefenseColab.GameObjects;
 
 namespace TowerDefenseColab.GamePhases
 {
+
+
     public class GameLevel : GamePhase
     {
         private Image _background;
@@ -19,7 +21,7 @@ namespace TowerDefenseColab.GamePhases
         private readonly TowerFactory _towerFactory;
         private readonly GameLevelTime _time = new GameLevelTime();
         private Queue<EnemyTypeEnum> _monstersLeftToSpawn;
-        private bool _isPaused = true;
+        private GameState _gameState = GameState.Paused;
         private readonly List<TowerBase> _towers = new List<TowerBase>();
 
         public GameLevel(GameLevelSettings settings, EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager,
@@ -47,6 +49,18 @@ namespace TowerDefenseColab.GamePhases
         {
             if (IsVisible)
             {
+                if (_gameState == GameState.Won)
+                {
+                    _gamePhaseManager.LevelEndedPlayerWon(this);
+                    CurrentMonsters.Clear();
+                    return;
+                } else if (_gameState == GameState.Lost)
+                {
+                    _gamePhaseManager.LevelEndedPlayerLost(this);
+                    CurrentMonsters.Clear();
+                    return;
+                }
+
                 switch (key)
                 {
                     case Keys.Space:
@@ -69,22 +83,23 @@ namespace TowerDefenseColab.GamePhases
 
         private void TogglePause()
         {
-            _isPaused = !_isPaused;
-            if (_isPaused)
+            if (_gameState == GameState.Rolling)
             {
+                _gameState = GameState.Paused;
                 _time.Stop();
             }
-            else
+            else if (_gameState == GameState.Paused)
             {
+                _gameState = GameState.Rolling;
                 _time.Start();
             }
         }
 
-
         public override void Init()
         {
+            _time.Reset();
             _towers.Clear();
-            _isPaused = true;
+            _gameState = GameState.Paused;
             _monstersLeftToSpawn = new Queue<EnemyTypeEnum>(_settings.EnemyTypesToSpawn);
             _background = Image.FromFile($@"Assets\bglvl{_settings.LevelNumber}Path.png");
         }
@@ -93,6 +108,17 @@ namespace TowerDefenseColab.GamePhases
         {
             // clearing screen
             g.Graphics.DrawImage(_background, 0, 0);
+
+            if (_gameState == GameState.Won)
+            {
+                g.Graphics.DrawString("Wow. You won.", new Font("monospace", 20), new SolidBrush(Color.Blue), 300, 270);
+                return;
+            } else if (_gameState == GameState.Lost)
+            {
+                g.Graphics.DrawString("You noob. You lost. Again.", new Font("monospace", 20), new SolidBrush(Color.Blue), 300, 270);
+                return;
+            }
+
             foreach (EnemyBase monster in CurrentMonsters)
             {
                 monster.Render(g);
@@ -102,7 +128,7 @@ namespace TowerDefenseColab.GamePhases
                 tower.Render(g);
             }
             // Show pause info.
-            if (_isPaused)
+            if (_gameState == GameState.Paused)
             {
                 g.Graphics.DrawString("! PAUSED !", new Font("monospace", 20),
                     new SolidBrush(Color.Blue), 300, 270);
@@ -121,7 +147,7 @@ namespace TowerDefenseColab.GamePhases
             TowerBase placing = _towers.SingleOrDefault(t => t.TowerStateEnum == TowerStateEnum.Setup);
             placing?.SetLocationCenter(_inputManager.GetMousePosition());
 
-            if (_isPaused)
+            if (_gameState == GameState.Paused)
             {
                 return;
             }
@@ -131,7 +157,7 @@ namespace TowerDefenseColab.GamePhases
 
             if (CurrentMonsters.Count == 0 && _monstersLeftToSpawn.Count == 0)
             {
-                _gamePhaseManager.LevelEnded(this);
+                _gameState = GameState.Won;
                 return;
             }
 
@@ -142,6 +168,12 @@ namespace TowerDefenseColab.GamePhases
 
             foreach (EnemyBase monster in CurrentMonsters.ToList())
             {
+                if (monster.FoundPointG)
+                {
+                    _gameState = GameState.Lost;
+                    break;
+                }
+
                 // "Despawn" if dead...
                 if (!monster.IsAlive)
                 {

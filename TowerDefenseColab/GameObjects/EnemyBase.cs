@@ -24,10 +24,15 @@ namespace TowerDefenseColab.GameObjects
         private PointF currentTarget { get; set; }
 
         private int currentTargetIndex { get; set; } = 0;
-        
+
+        /// <summary>
+        /// Once the monster reaches the last waypoint, this will be true.
+        /// </summary>
+        public bool FoundPointG { get; private set; }
+
         public override void Init()
         {
-            
+            FoundPointG = false;
         }
 
         public override void Update(TimeSpan timeDelta)
@@ -81,11 +86,20 @@ namespace TowerDefenseColab.GameObjects
             {
                 //if monster distance is less than 1 pixel to target increment waypoints index
                 currentTargetIndex++;
+
+                // Monster reached the last waypoint - he dies, but a flag is raised.
+                if (currentTargetIndex >= Waypoints.Count)
+                {
+                    FoundPointG = true;
+                    Die();
+                }
             }
 
             //TODO: need to check if map end is at axis Y
-            if (LocationCenter.X > 795)
+            // Because of a buggy paths I needed to add this.
+            if (LocationCenter.X > 800)
             {
+                FoundPointG = true;
                 Die();
             }
         }
