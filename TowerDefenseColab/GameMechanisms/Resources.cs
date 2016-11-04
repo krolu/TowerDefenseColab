@@ -19,7 +19,7 @@ namespace TowerDefenseColab.GameMechanisms
         public void AddForKilling(EnemyBase enemy)
         {
             // TODO: add proper amount depending on the enemy type/level/other modifiers?
-            Add(1);
+            Add(enemy.ResourcesForKilling);
         }
 
         /// <summary>
