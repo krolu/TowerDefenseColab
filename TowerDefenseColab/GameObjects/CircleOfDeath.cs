@@ -14,7 +14,7 @@ namespace TowerDefenseColab.GameObjects
             Sprite = Image.FromFile("Assets\\sprite1.png");
             Speed = 100f;
             Health = 3;
-            ResourcesForKilling = 10;
+            ResourcesForKilling = 1;
 
             AnimSprite = new AnimatedSprite(Sprite, new Size(32, 32));
             AnimSprite.Animations = new List<Animation>()
