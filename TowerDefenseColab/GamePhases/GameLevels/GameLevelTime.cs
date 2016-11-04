@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace TowerDefenseColab.GamePhases
+namespace TowerDefenseColab.GamePhases.GameLevels
 {
     public class GameLevelTime
     {

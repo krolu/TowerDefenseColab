@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using TowerDefenseColab.GameObjects;
 using TowerDefenseColab.GamePhases;
+using TowerDefenseColab.GamePhases.GameLevels;
 
 namespace TowerDefenseColab
 {
@@ -48,16 +50,18 @@ namespace TowerDefenseColab
                     SpawnPoint = new Point(0, 270),
                     SpawnFrequency = TimeSpan.FromSeconds(1),
                     LevelNumber = 1,
+                    StartingResources = 10,
                     Waypoints = waypoints1
 
                 }));
             _phaseManager.Add(GamePhaseEnum.Level002,
                 _gameLevelFactory.CreateLevel(new GameLevelSettings
                 {
-                    EnemyTypesToSpawn = new[] {EnemyTypeEnum.CircleOfDeath, EnemyTypeEnum.CircleOfDeath},
+                    EnemyTypesToSpawn = Enumerable.Range(0,20).Select(i=> EnemyTypeEnum.CircleOfDeath),
                     SpawnPoint = new Point(0, 270),
                     SpawnFrequency = TimeSpan.FromSeconds(1.5),
                     LevelNumber = 2,
+                    StartingResources = 20,
                     Waypoints = waypoints2
                 }));
 

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using TowerDefenseColab.GameMechanisms;
 using TowerDefenseColab.GameObjects;
 
-namespace TowerDefenseColab.GamePhases
+namespace TowerDefenseColab.GamePhases.GameLevels
 {
-
-
     public class GameLevel : GamePhase
     {
         private Image _background;
@@ -23,6 +22,7 @@ namespace TowerDefenseColab.GamePhases
         private Queue<EnemyTypeEnum> _monstersLeftToSpawn;
         private GameState _gameState = GameState.Paused;
         private readonly List<TowerBase> _towers = new List<TowerBase>();
+        private Resources _resources;
 
         public GameLevel(GameLevelSettings settings, EnemyFactory enemyFactory, GamePhaseManager gamePhaseManager,
             InputManager inputManager, TowerFactory towerFactory)
@@ -41,7 +41,10 @@ namespace TowerDefenseColab.GamePhases
             if (IsVisible)
             {
                 TowerBase placing = _towers.SingleOrDefault(t => t.TowerStateEnum == TowerStateEnum.Setup);
-                if (placing != null) placing.TowerStateEnum = TowerStateEnum.Active;
+                if (placing != null)
+                {
+                    placing.TowerStateEnum = TowerStateEnum.Active;
+                }
             }
         }
 
@@ -67,17 +70,27 @@ namespace TowerDefenseColab.GamePhases
                         TogglePause();
                         break;
                     case Keys.D1:
-                        _towers.RemoveAll(t => t.TowerStateEnum == TowerStateEnum.Setup);
-                        TowerBase newTower = _towerFactory.GetTower(_time, this, new TowerSettings
-                        {
-                            Powah = 1,
-                            RangePixels = 100,
-                            ShootFrequency = TimeSpan.FromSeconds(1)
-                        });
-                        newTower.Init();
-                        _towers.Add(newTower);
+                        StartPlacingTower();
                         break;
                 }
+            }
+        }
+
+        private void StartPlacingTower()
+        {
+            _towers.RemoveAll(t => t.TowerStateEnum == TowerStateEnum.Setup);
+            TowerBase newTower = _towerFactory.GetTower(_time, this, new TowerSettings
+            {
+                Powah = 1,
+                RangePixels = 100,
+                ShootFrequency = TimeSpan.FromSeconds(1),
+                CostBase = 10
+            });
+            newTower.Init();
+
+            if (_resources.TryTake(newTower.Settings.CostBase))
+            {
+                _towers.Add(newTower);
             }
         }
 
@@ -102,6 +115,7 @@ namespace TowerDefenseColab.GamePhases
             _gameState = GameState.Paused;
             _monstersLeftToSpawn = new Queue<EnemyTypeEnum>(_settings.EnemyTypesToSpawn);
             _background = Image.FromFile($@"Assets\bglvl{_settings.LevelNumber}Path.png");
+            _resources = new Resources(_settings.StartingResources);
         }
 
         public override void Render(BufferedGraphics g)
@@ -139,6 +153,9 @@ namespace TowerDefenseColab.GamePhases
 
             g.Graphics.DrawString($"{_time.GetCurrent()}",
                 new Font("monospace", 10), new SolidBrush(Color.Blue), 10, 0);
+
+            g.Graphics.DrawString($"${_resources.Amount}",
+                new Font("monospace", 10), new SolidBrush(Color.Blue), 700, 20);
         }
 
         public override void Update(TimeSpan timeDelta)
@@ -196,9 +213,19 @@ namespace TowerDefenseColab.GamePhases
                 enemy.Init();
                 enemy.SetLocation(_settings.SpawnPoint);
                 enemy.Waypoints = _settings.Waypoints;
+                enemy.OnDeathAction = OnEnemyDeath;
                 CurrentMonsters.Add(enemy);
                 _lastSpawn = nao;
             }
+        }
+
+        /// <summary>
+        /// This will be called when an enemy dies.
+        /// </summary>
+        private void OnEnemyDeath(EnemyBase enemy)
+        {
+            // Git some moneyz!
+            _resources.AddForKilling(enemy);
         }
     }
 }

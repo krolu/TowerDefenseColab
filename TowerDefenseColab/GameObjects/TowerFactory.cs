@@ -1,6 +1,5 @@
-﻿using System;
-using StructureMap;
-using TowerDefenseColab.GamePhases;
+﻿using StructureMap;
+using TowerDefenseColab.GamePhases.GameLevels;
 
 namespace TowerDefenseColab.GameObjects
 {

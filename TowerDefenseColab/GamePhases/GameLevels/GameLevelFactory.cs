@@ -1,7 +1,7 @@
 ﻿using StructureMap;
 using TowerDefenseColab.GameObjects;
 
-namespace TowerDefenseColab.GamePhases
+namespace TowerDefenseColab.GamePhases.GameLevels
 {
     public class GameLevelFactory
     {

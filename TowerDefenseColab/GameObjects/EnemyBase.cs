@@ -30,6 +30,10 @@ namespace TowerDefenseColab.GameObjects
 
         private int currentTargetIndex { get; set; } = 0;
 
+        public decimal ResourcesForKilling { get; protected set; }
+
+        public Action<EnemyBase> OnDeathAction { get; set; }
+
         /// <summary>
         /// Once the monster reaches the last waypoint, this will be true.
         /// </summary>
@@ -130,6 +134,8 @@ namespace TowerDefenseColab.GameObjects
 
             // How long will this enemy will be visible after death.
             AgonyPeriod = AnimSprite.CurrentAnimation.AnimationTime;
+
+            OnDeathAction(this);
         }
 
         private void ShowDeathSprite()

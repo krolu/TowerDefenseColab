@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TowerDefenseColab.GamePhases
+namespace TowerDefenseColab.GamePhases.GameLevels
 {
     public class GameLevelActionLimiter
     {

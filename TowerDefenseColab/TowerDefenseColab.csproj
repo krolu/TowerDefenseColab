@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameMechanisms\Animation.cs" />
+    <Compile Include="GameMechanisms\Resources.cs" />
     <Compile Include="GameObjects\CircleOfDeath.cs" />
     <Compile Include="GameObjects\EnemyBase.cs" />
     <Compile Include="GameObjects\EnemyFactory.cs" />
@@ -67,12 +68,12 @@
     <Compile Include="GameObjects\TowerSettings.cs" />
     <Compile Include="GameObjects\TowerStateEnum.cs" />
     <Compile Include="GameObjects\Weapon.cs" />
-    <Compile Include="GamePhases\GameLevel.cs" />
+    <Compile Include="GamePhases\GameLevels\GameLevel.cs" />
     <Compile Include="GameLoopMethods.cs" />
-    <Compile Include="GamePhases\GameLevelFactory.cs" />
-    <Compile Include="GamePhases\GameLevelSettings.cs" />
-    <Compile Include="GamePhases\GameLevelActionLimiter.cs" />
-    <Compile Include="GamePhases\GameLevelTime.cs" />
+    <Compile Include="GamePhases\GameLevels\GameLevelFactory.cs" />
+    <Compile Include="GamePhases\GameLevels\GameLevelSettings.cs" />
+    <Compile Include="GamePhases\GameLevels\GameLevelActionLimiter.cs" />
+    <Compile Include="GamePhases\GameLevels\GameLevelTime.cs" />
     <Compile Include="GamePhases\GamePhase.cs" />
     <Compile Include="GamePhases\GamePhaseEnum.cs" />
     <Compile Include="GamePhases\GamePhaseManager.cs" />

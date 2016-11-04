@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TowerDefenseColab.GamePhases;
+using TowerDefenseColab.GamePhases.GameLevels;
 
 namespace TowerDefenseColab.Tests
 {
