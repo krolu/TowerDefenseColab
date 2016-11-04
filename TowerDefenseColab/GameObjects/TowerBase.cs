@@ -58,7 +58,12 @@ namespace TowerDefenseColab.GameObjects
         private void Shoot()
         {
             // Find the closest enemy.
-            EnemyBase closestEnemy = _gameLevel.CurrentMonsters.OrderBy(m => m.GetDistance(this)).FirstOrDefault();
+            EnemyBase closestEnemy = _gameLevel
+                .CurrentMonsters
+                .Where(m=>m.IsAlive && m.IsVisible)
+                .OrderBy(m => m.GetDistance(this))
+                .FirstOrDefault();
+
             if (closestEnemy != null && closestEnemy.GetDistance(this) < Settings.RangePixels)
             {
                 _shootLimiter.DoingIt();

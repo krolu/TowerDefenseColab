@@ -26,16 +26,14 @@ namespace TowerDefenseColab.GameObjects
         public override void Update(TimeSpan timeDelta)
         {
             base.Update(timeDelta);
-            AnimatedSprite sprite = IsAlive ? AnimSprite : AnimSpriteDeath;
-            sprite.Update(timeDelta, LocationCenter);
+            AnimSprite.Update(timeDelta, LocationCenter);
         }
 
         public override void Render(BufferedGraphics g)
         {
             //base.Render(g);
 
-            AnimatedSprite sprite = IsAlive ? AnimSprite : AnimSpriteDeath;
-            sprite.Render(g.Graphics);
+            AnimSprite.Render(g.Graphics);
 
             g.Graphics.DrawString($"{Health}", new Font("monospace", 10),
                 new SolidBrush(Color.Blue), LocationCenter.X, LocationCenter.Y - 10);

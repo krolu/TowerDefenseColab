@@ -26,8 +26,6 @@ namespace TowerDefenseColab.GameObjects
 
         public AnimatedSprite AnimSprite { get; set; }
 
-        public AnimatedSprite AnimSpriteDeath { get; set; }
-
         private PointF currentTarget { get; set; }
 
         private int currentTargetIndex { get; set; } = 0;
@@ -40,15 +38,6 @@ namespace TowerDefenseColab.GameObjects
         public override void Init()
         {
             FoundPointG = false;
-            AnimSpriteDeath = new AnimatedSprite(Image.FromFile("Assets\\boom.png"), new Size(60, 45));
-            AnimSpriteDeath.Animations = new List<Animation>()
-            {
-                new Animation(0, 3, 10f)
-            };
-            AnimSpriteDeath.CurrentAnimation = AnimSpriteDeath.Animations[0];
-
-            // How long will this enemy will be visible after death.
-            AgonyPeriod = AnimSpriteDeath.CurrentAnimation.AnimationTime;
         }
 
         public override void Update(TimeSpan timeDelta)
@@ -136,6 +125,21 @@ namespace TowerDefenseColab.GameObjects
         private void Die()
         {
             IsAlive = false;
+
+            ShowDeathSprite();
+
+            // How long will this enemy will be visible after death.
+            AgonyPeriod = AnimSprite.CurrentAnimation.AnimationTime;
+        }
+
+        private void ShowDeathSprite()
+        {
+            AnimSprite = new AnimatedSprite(Image.FromFile("Assets\\boom.png"), new Size(60, 45));
+            AnimSprite.Animations = new List<Animation>()
+            {
+                new Animation(0, 3, 10f)
+            };
+            AnimSprite.CurrentAnimation = AnimSprite.Animations[0];
         }
 
         // Thie enemy was shot by the tower.
