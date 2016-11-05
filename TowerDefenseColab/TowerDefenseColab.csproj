@@ -57,9 +57,10 @@
   <ItemGroup>
     <Compile Include="GameMechanisms\Animation.cs" />
     <Compile Include="GameMechanisms\Resources.cs" />
-    <Compile Include="GameObjects\CircleOfDeath.cs" />
+    <Compile Include="GameObjects\AnimationInfo.cs" />
     <Compile Include="GameObjects\EnemyBase.cs" />
     <Compile Include="GameObjects\EnemyFactory.cs" />
+    <Compile Include="GameObjects\EnemySettings.cs" />
     <Compile Include="GameObjects\EnemyTypeEnum.cs" />
     <Compile Include="GameObjects\GameObjectBase.cs" />
     <Compile Include="GameObjects\AnimatedSprite.cs" />

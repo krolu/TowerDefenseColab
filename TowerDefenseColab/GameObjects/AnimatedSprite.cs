@@ -8,39 +8,48 @@ using TowerDefenseColab.GameMechanisms;
 
 namespace TowerDefenseColab.GameObjects
 {
-    public class AnimatedSprite
+    public class AnimatedSprite : GameObjectBase
     {
         public List<Animation> Animations { get; set; }
         public Animation CurrentAnimation { get; set; }
         
-        private Image _image;
-        private Size _frameSize;
+        protected Size FrameSize;
         private Point _location;
 
-        public AnimatedSprite(Image image, Size frameSize)
+        public AnimatedSprite()
         {
-            _image = image;
-            _frameSize = frameSize;
-        }
-        
-        public void Update(TimeSpan timeDelta, PointF location)
-        {
-            CurrentAnimation.Update(timeDelta);
-            _location = new Point((int)(location.X - _frameSize.Width / 2f), (int)(location.Y - _frameSize.Height / 2f));
+            
         }
 
-        public void Render(Graphics g)
+        public AnimatedSprite(Size frameSize, List<Animation> animations)
+        {
+            Animations = animations;
+            FrameSize = frameSize;
+        }
+
+        public override void Render(BufferedGraphics g)
         {
             Rectangle sourceRectangle = new Rectangle(
-                CurrentAnimation.CurrentFrame * _frameSize.Width,
+                CurrentAnimation.CurrentFrame * FrameSize.Width,
                 0,
-                _frameSize.Width,
-                _frameSize.Height);
+                FrameSize.Width,
+                FrameSize.Height);
             Rectangle destRectangle = new Rectangle(
                 _location, 
-                _frameSize);
+                FrameSize);
             
-            g.DrawImage(_image, destRectangle, sourceRectangle, GraphicsUnit.Pixel);
+            g.Graphics.DrawImage(Sprite, destRectangle, sourceRectangle, GraphicsUnit.Pixel);
+        }
+
+        public override void Init()
+        {
+            
+        }
+
+        public override void Update(TimeSpan timeDelta)
+        {
+            CurrentAnimation.Update(timeDelta);
+            _location = new Point((int)(LocationCenter.X - FrameSize.Width / 2f), (int)(LocationCenter.Y - FrameSize.Height / 2f));
         }
     }
 }

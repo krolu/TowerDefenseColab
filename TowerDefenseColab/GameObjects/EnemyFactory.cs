@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using TowerDefenseColab.GameMechanisms;
 using TowerDefenseColab.GamePhases;
 
 namespace TowerDefenseColab.GameObjects
@@ -17,7 +20,22 @@ namespace TowerDefenseColab.GameObjects
             switch (type)
             {
                 case EnemyTypeEnum.CircleOfDeath:
-                    return new CircleOfDeath();
+                    return new EnemyBase(
+                        new EnemySettings()
+                        {
+                            Health = 3,
+                            Speed = 100,
+                            ResourcesForKilling = 1
+                        }, 
+                        "Assets\\sprite1.png",
+                        new AnimationInfo()
+                        {
+                            FrameSize = new Size(32, 32),
+                            AnimationsList = new List<Animation>()
+                            {
+                                new Animation(0, 3, 20f)
+                            }
+                        });
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

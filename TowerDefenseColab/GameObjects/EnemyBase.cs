@@ -7,7 +7,7 @@ using TowerDefenseColab.GameMechanisms;
 
 namespace TowerDefenseColab.GameObjects
 {
-    public class EnemyBase : GameObjectBase
+    public class EnemyBase : AnimatedSprite
     {
         /// <summary>
         /// Pixels per second.
@@ -24,8 +24,6 @@ namespace TowerDefenseColab.GameObjects
 
         public List<PointF> Waypoints { get; set; }
 
-        public AnimatedSprite AnimSprite { get; set; }
-
         private PointF currentTarget { get; set; }
 
         private int currentTargetIndex { get; set; } = 0;
@@ -38,6 +36,17 @@ namespace TowerDefenseColab.GameObjects
         /// Once the monster reaches the last waypoint, this will be true.
         /// </summary>
         public bool FoundPointG { get; private set; }
+
+        public EnemyBase(EnemySettings enemySettings, string spritePath, AnimationInfo animInfo)
+        {
+            Sprite = Image.FromFile(spritePath);
+            Health = enemySettings.Health;
+            Speed = enemySettings.Speed;
+            ResourcesForKilling = enemySettings.ResourcesForKilling;
+            FrameSize = animInfo.FrameSize;
+            Animations = animInfo.AnimationsList;
+            CurrentAnimation = Animations.FirstOrDefault();
+        }
 
         public override void Init()
         {
@@ -124,6 +133,8 @@ namespace TowerDefenseColab.GameObjects
                 FoundPointG = true;
                 Die();
             }
+
+            base.Update(timeDelta);
         }
 
         private void Die()
@@ -133,19 +144,20 @@ namespace TowerDefenseColab.GameObjects
             ShowDeathSprite();
 
             // How long will this enemy will be visible after death.
-            AgonyPeriod = AnimSprite.CurrentAnimation.AnimationTime;
+            AgonyPeriod = CurrentAnimation.AnimationTime;
 
             OnDeathAction(this);
         }
 
         private void ShowDeathSprite()
         {
-            AnimSprite = new AnimatedSprite(Image.FromFile("Assets\\boom.png"), new Size(60, 45));
-            AnimSprite.Animations = new List<Animation>()
+            Sprite = Image.FromFile("Assets\\boom.png");
+            FrameSize = new Size(60, 45);
+            Animations = new List<Animation>()
             {
                 new Animation(0, 3, 10f)
             };
-            AnimSprite.CurrentAnimation = AnimSprite.Animations[0];
+            CurrentAnimation = Animations[0];
         }
 
         // Thie enemy was shot by the tower.
@@ -156,6 +168,14 @@ namespace TowerDefenseColab.GameObjects
             {
                 Die();
             }
+        }
+
+        public override void Render(BufferedGraphics g)
+        {
+            base.Render(g);
+
+            g.Graphics.DrawString($"{Health}", new Font("monospace", 10),
+                new SolidBrush(Color.Blue), LocationCenter.X, LocationCenter.Y - 10);
         }
     }
 }
